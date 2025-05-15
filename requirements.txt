@@ -1,5 +1,6 @@
-fastapi
-uvicorn[standard]
-sqlalchemy
-aiosqlite
-pydantic
+fastapi==0.115.12
+uvicorn==0.34.2
+sqlalchemy==2.0.41
+asyncpg==0.30.0
+python-dotenv==1.1.0
+gunicorn==23.0.0
