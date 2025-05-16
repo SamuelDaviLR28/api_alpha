@@ -1,21 +1,26 @@
-import os
 from dotenv import load_dotenv
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker, declarative_base
+from pathlib import Path
+import os
 
-load_dotenv()  # Carrega variáveis do arquivo .env
+# Carregar .env no módulo database
+env_path = Path(__file__).parent.parent / '.env'
+load_dotenv(dotenv_path=env_path)
 
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql+asyncpg://samueldavi:13791379@localhost/api_toutxalpha"
-)
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-engine = create_async_engine(DATABASE_URL, echo=True)
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL não definido nas variáveis de ambiente (.env)")
 
-async_session = sessionmaker(
-    bind=engine,
-    class_=AsyncSession,
-    expire_on_commit=False
-)
+DATABASE_URL = DATABASE_URL.strip()
 
+# resto do seu código SQLAlchemy aqui...
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+
+def get_connection():
+    return SessionLocal()
