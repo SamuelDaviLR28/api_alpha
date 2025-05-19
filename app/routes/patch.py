@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
+from app.models.models import Patch
 
 router = APIRouter()
 
@@ -11,7 +12,10 @@ def get_db():
     finally:
         db.close()
 
-@router.patch("/frete-prazo")
-def update_frete_prazo(payload: dict, db: Session = Depends(get_db)):
-    # Aqui o processamento de valor do frete e prazo
-    return {"message": "Frete e prazo atualizados com sucesso"}
+@router.post("/patch")
+def post_patch(payload: dict, db: Session = Depends(get_db)):
+    novo = Patch(dados=payload)
+    db.add(novo)
+    db.commit()
+    db.refresh(novo)
+    return {"message": "Patch recebido", "id": novo.id}

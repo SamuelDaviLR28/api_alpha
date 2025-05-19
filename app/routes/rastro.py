@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
+from app.models.models import Rastro
 
 router = APIRouter()
 
@@ -13,5 +14,8 @@ def get_db():
 
 @router.post("/rastro")
 def post_rastro_event(payload: dict, db: Session = Depends(get_db)):
-    # Armazenar evento de rastreamento
-    return {"message": "Ocorrência registrada"}
+    novo = Rastro(dados=payload)
+    db.add(novo)
+    db.commit()
+    db.refresh(novo)
+    return {"message": "Ocorrência registrada", "id": novo.id}

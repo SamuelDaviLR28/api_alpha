@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
+from app.models.models import Rota
 
 router = APIRouter()
 
@@ -13,4 +14,8 @@ def get_db():
 
 @router.post("/rota")
 def post_rota(payload: dict, db: Session = Depends(get_db)):
-    return {"message": "Rota recebida"}
+    novo = Rota(dados=payload)
+    db.add(novo)
+    db.commit()
+    db.refresh(novo)
+    return {"message": "Rota recebida", "id": novo.id}

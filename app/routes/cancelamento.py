@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
+from app.models.models import Cancelamento
 
 router = APIRouter()
 
@@ -13,4 +14,8 @@ def get_db():
 
 @router.put("/cancelar-suspender")
 def cancelar_suspender(payload: dict, db: Session = Depends(get_db)):
-    return {"message": "Cancelamento ou suspensão processado"}
+    novo = Cancelamento(dados=payload)
+    db.add(novo)
+    db.commit()
+    db.refresh(novo)
+    return {"message": "Cancelamento ou suspensão processado", "id": novo.id}
