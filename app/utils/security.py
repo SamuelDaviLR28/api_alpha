@@ -4,8 +4,8 @@ import secrets
 
 security = HTTPBasic()
 
-API_KEYS = ["minha-api-key-secreta"]
-VALID_USERS = {"admin": "senha123"}
+API_KEYS = ["3f918c13-6019-41ad-9a0b-89ab0d9be70e"]
+VALID_USERS = {"admin": "13791379"}
 
 def verify_api_key(x_api_key: str = Header(...)):
     if x_api_key not in API_KEYS:
