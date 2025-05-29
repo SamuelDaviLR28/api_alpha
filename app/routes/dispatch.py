@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Header, HTTPException, status
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app.models.models import Dispatch
-from app.schemas.dispatch import DispatchCreate
+from app.schemas.dispatch import DispatchToutbox
 import os
 from dotenv import load_dotenv
 
@@ -27,7 +27,7 @@ def verify_api_key(x_api_key: str = Header(...)):
         )
 
 @router.post("/dispatch", dependencies=[Depends(verify_api_key)])
-def receive_dispatch(payload: DispatchCreate, db: Session = Depends(get_db)):
+def receive_dispatch(payload: DispatchToutbox, db: Session = Depends(get_db)):
     new_dispatch = Dispatch(**payload.dict())
     db.add(new_dispatch)
     db.commit()
