@@ -1,0 +1,47 @@
+[33mcommit d7afaff647dcb940143923df4344f3a59af9de2a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m
+Author: Samuel Davi <samueldavi670@gmail.com>
+Date:   Thu May 29 17:26:10 2025 -0300
+
+    feat: atualiza rota dispatch e corrige schemas
+
+[33mcommit 84c6f2480e4c064f342b46cefd3ba7f8f50df5f0[m[33m ([m[1;31morigin/master[m[33m)[m
+Author: Samuel Davi <samueldavi670@gmail.com>
+Date:   Wed May 21 10:31:03 2025 -0300
+
+    Atualiza models, database e configurações para rodar no Railway
+
+[33mcommit 350a2cf15440f532158632567c48322b71ad3b08[m
+Author: Samuel Davi <samueldavi670@gmail.com>
+Date:   Mon May 19 16:13:37 2025 -0300
+
+    Add root route to main.py for online API verification
+
+[33mcommit d9c48f47b8134e21d44738f75a6e85b34e5c7c24[m
+Author: Samuel Davi <samueldavi670@gmail.com>
+Date:   Mon May 19 15:55:40 2025 -0300
+
+    Force deploy
+
+[33mcommit cd22630cdfdaacda88bd307901cf5127e4993da2[m
+Author: Samuel Davi <samueldavi670@gmail.com>
+Date:   Mon May 19 15:52:09 2025 -0300
+
+    Add psycopg2-binary to requirements
+
+[33mcommit c26b79f0ca56d0c206b97b4685462d8ad8fc05a6[m
+Author: Samuel Davi <samueldavi670@gmail.com>
+Date:   Mon May 19 15:48:25 2025 -0300
+
+    Add Procfile for deployment
+
+[33mcommit bf471e2fb69bc9fdbf914aec8ae6839b7f5b28a5[m
+Author: Samuel Davi <samueldavi670@gmail.com>
+Date:   Mon May 19 15:31:54 2025 -0300
+
+    Atualização: adicionadas novas tabelas e ajustes nos endpoints
+
+[33mcommit 8d266b07b3c3eb9123d84f3652f7a795e9856300[m
+Author: Samuel Davi <samueldavi670@gmail.com>
+Date:   Mon May 19 12:00:25 2025 -0300
+
+    Primeiro commit - api_alpha
