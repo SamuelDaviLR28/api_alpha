@@ -2,125 +2,125 @@ from pydantic import BaseModel
 from typing import List, Optional, Dict
 
 class Marketplace(BaseModel):
-    Id: str
-    Nome: str
+    Id: Optional[str] = None
+    Nome: Optional[str] = None
 
 class Marca(BaseModel):
-    Id: str
-    Nome: str
+    Id: Optional[str] = None
+    Nome: Optional[str] = None
 
 class Seller(BaseModel):
-    Id: str
-    RazaoSocial: str
-    NomeFantasia: str
-    CNPJ: str
-    Contato: str
-    Email: str
-    Endereco: str
-    Numero: str
-    Complemento: str
-    Bairro: str
-    Cidade: str
-    Estado: str
-    Pais: str
-    CEP: str
+    Id: Optional[str] = None
+    RazaoSocial: Optional[str] = None
+    NomeFantasia: Optional[str] = None
+    CNPJ: Optional[str] = None
+    Contato: Optional[str] = None
+    Email: Optional[str] = None
+    Endereco: Optional[str] = None
+    Numero: Optional[str] = None
+    Complemento: Optional[str] = None
+    Bairro: Optional[str] = None
+    Cidade: Optional[str] = None
+    Estado: Optional[str] = None
+    Pais: Optional[str] = None
+    CEP: Optional[str] = None
 
 class Produto(BaseModel):
-    Descricao: str
-    Altura: float
-    Comprimento: float
-    Largura: float
-    Peso: float
-    Preco: float
-    Quantidade: int
-    SKU: str
+    Descricao: Optional[str] = None
+    Altura: Optional[float] = None
+    Comprimento: Optional[float] = None
+    Largura: Optional[float] = None
+    Peso: Optional[float] = None
+    Preco: Optional[float] = None
+    Quantidade: Optional[int] = None
+    SKU: Optional[str] = None
 
 class Transportadora(BaseModel):
-    id: str
-    Nome: str
-    NomeServico: str
-    IdServico: str
-    CodigoRastreio: str
-    ListaPostagem: str
-    CNPJ: str
-    Reversa: bool
-    CodigoAutorizacao: str
-    Coleta: bool
-    EntregaAgendada: bool
-    DataPrometida: str
-    PrazoDiasUteis: int
-    PrevisaoDeEntrega: str
-    ValorAR: float
-    ValorAverbadoPago: float
-    ValorDeclarado: float
-    ValorFrete: float
+    id: Optional[str] = None
+    Nome: Optional[str] = None
+    NomeServico: Optional[str] = None
+    IdServico: Optional[str] = None
+    CodigoRastreio: Optional[str] = None
+    ListaPostagem: Optional[str] = None
+    CNPJ: Optional[str] = None
+    Reversa: Optional[bool] = None
+    CodigoAutorizacao: Optional[str] = None
+    Coleta: Optional[bool] = None
+    EntregaAgendada: Optional[bool] = None
+    DataPrometida: Optional[str] = None
+    PrazoDiasUteis: Optional[int] = None
+    PrevisaoDeEntrega: Optional[str] = None
+    ValorAR: Optional[float] = None
+    ValorAverbadoPago: Optional[float] = None
+    ValorDeclarado: Optional[float] = None
+    ValorFrete: Optional[float] = None
 
 class Pessoa(BaseModel):
-    Nome: str
-    CPFCNPJ: str
-    IE: str
+    Nome: Optional[str] = None
+    CPFCNPJ: Optional[str] = None
+    IE: Optional[str] = None
     Telefone: Optional[str] = None
     Email: Optional[str] = None
     Empresa: Optional[str] = None
-    Endereco: str
-    Numero: str
-    Complemento: str
-    Bairro: str
-    Cidade: str
-    Estado: str
-    Pais: str
-    CEP: str
+    Endereco: Optional[str] = None
+    Numero: Optional[str] = None
+    Complemento: Optional[str] = None
+    Bairro: Optional[str] = None
+    Cidade: Optional[str] = None
+    Estado: Optional[str] = None
+    Pais: Optional[str] = None
+    CEP: Optional[str] = None
 
 class Remetente(BaseModel):
-    Loja: bool
-    NomeCentroDistribuicao: str
-    CodigoCentroDistribuicao: str
-    CPFCNPJ: str
-    IE: str
-    Endereco: str
-    Numero: str
-    Complemento: str
-    Bairro: str
-    Cidade: str
-    Estado: str
-    Pais: str
-    CEP: str
+    Loja: Optional[bool] = None
+    NomeCentroDistribuicao: Optional[str] = None
+    CodigoCentroDistribuicao: Optional[str] = None
+    CPFCNPJ: Optional[str] = None
+    IE: Optional[str] = None
+    Endereco: Optional[str] = None
+    Numero: Optional[str] = None
+    Complemento: Optional[str] = None
+    Bairro: Optional[str] = None
+    Cidade: Optional[str] = None
+    Estado: Optional[str] = None
+    Pais: Optional[str] = None
+    CEP: Optional[str] = None
 
 class Frete(BaseModel):
-    Transportadora: Transportadora
-    Destinatario: Pessoa
-    Tomador: Pessoa
-    Remetente: Remetente
+    Transportadora: Optional[Transportadora] = None
+    Destinatario: Optional[Pessoa] = None
+    Tomador: Optional[Pessoa] = None
+    Remetente: Optional[Remetente] = None
 
 class Item(BaseModel):
-    IdUnico: str
-    Volumes: str
-    Largura: float
-    Peso: float
-    Altura: float
-    Comprimento: float
-    Formato: str
-    Produtos: List[Produto]
-    Frete: Frete
+    IdUnico: Optional[str] = None
+    Volumes: Optional[str] = None
+    Largura: Optional[float] = None
+    Peso: Optional[float] = None
+    Altura: Optional[float] = None
+    Comprimento: Optional[float] = None
+    Formato: Optional[str] = None
+    Produtos: Optional[List[Produto]] = None
+    Frete: Optional[Frete] = None
 
 class NotaFiscal(BaseModel):
-    Numero: str
-    Serie: str
-    Cfop: str
-    Chave: str
-    DataEmissao: str
-    ValorTotal: float
-    ValorTotalProdutos: float
-    InfosAdicionais: Dict[str, str]
+    Numero: Optional[str] = None
+    Serie: Optional[str] = None
+    Cfop: Optional[str] = None
+    Chave: Optional[str] = None
+    DataEmissao: Optional[str] = None
+    ValorTotal: Optional[float] = None
+    ValorTotalProdutos: Optional[float] = None
+    InfosAdicionais: Optional[Dict[str, str]] = None
 
 class DispatchToutbox(BaseModel):
-    CriacaoPedido: str
-    DataPagamento: Optional[str]
-    NumeroPedido: str
-    NumeroPedidomarketplace: str
-    NumeroPedidoErp: str
-    Marketplace: Marketplace
-    Marca: Marca
-    Seller: Seller
-    Itens: List[Item]
-    NotaFiscal: NotaFiscal
+    CriacaoPedido: Optional[str] = None
+    DataPagamento: Optional[str] = None
+    NumeroPedido: Optional[str] = None
+    NumeroPedidomarketplace: Optional[str] = None
+    NumeroPedidoErp: Optional[str] = None
+    Marketplace: Optional[Marketplace] = None
+    Marca: Optional[Marca] = None
+    Seller: Optional[Seller] = None
+    Itens: Optional[List[Item]] = None
+    NotaFiscal: Optional[NotaFiscal] = None
