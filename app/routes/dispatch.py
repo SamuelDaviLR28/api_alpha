@@ -6,7 +6,7 @@ from app.schemas.dispatch import DispatchToutbox
 import os
 from dotenv import load_dotenv
 
-load_dotenv() 
+load_dotenv()
 
 router = APIRouter(prefix="/hooks/vivo")
 
@@ -33,3 +33,8 @@ def receive_dispatch(payload: DispatchToutbox, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_dispatch)
     return {"message": "Pedido recebido com sucesso", "id": new_dispatch.id}
+
+@router.get("/dispatch", dependencies=[Depends(verify_api_key)])
+def list_dispatches(db: Session = Depends(get_db)):
+    dispatches = db.query(Dispatch).all()
+    return dispatches
