@@ -1,11 +1,9 @@
 from fastapi import FastAPI, Header, HTTPException
 from dotenv import load_dotenv
 import os
-
 from app.routes import dispatch, patch, rastro, motorista, rota, cancelamento
 
 load_dotenv()
-
 app = FastAPI()
 
 API_KEY = os.getenv("API_KEY")

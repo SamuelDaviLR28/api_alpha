@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 load_dotenv() 
 
-router = APIRouter()
+router = APIRouter(prefix="/hooks/vivo")
 
 API_KEY = os.getenv("API_KEY")
 
