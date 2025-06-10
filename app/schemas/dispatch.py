@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from typing import List, Optional, Dict
 
 class Marketplace(BaseModel):
@@ -24,6 +24,12 @@ class Seller(BaseModel):
     Estado: Optional[str] = None
     Pais: Optional[str] = None
     CEP: Optional[str] = None
+
+    @validator("CNPJ")
+    def validar_cnpj(cls, value):
+        if value and not value.replace(".", "").replace("/", "").replace("-", "").isdigit():
+            raise ValueError("CNPJ inválido")
+        return value
 
 class Produto(BaseModel):
     Descricao: str
@@ -66,6 +72,12 @@ class Pessoa(BaseModel):
     Estado: Optional[str] = None
     Pais: Optional[str] = None
     CEP: Optional[str] = None
+
+    @validator("CPFCNPJ")
+    def validar_cpf_cnpj(cls, value):
+        if value and not value.replace(".", "").replace("/", "").replace("-", "").isdigit():
+            raise ValueError("CPF/CNPJ inválido")
+        return value
 
 class Remetente(BaseModel):
     NomeCentroDistribuicao: str
