@@ -19,8 +19,8 @@ def get_db():
     finally:
         db.close()
 
-def verify_api_key(x_api_key: str = Header(...)):
-    if x_api_key != API_KEY:
+def verify_api_key(x_api_key: str = Header(None)): 
+    if not x_api_key or x_api_key != API_KEY:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="API Key inválida"
@@ -28,13 +28,20 @@ def verify_api_key(x_api_key: str = Header(...)):
 
 @router.post("/dispatch", dependencies=[Depends(verify_api_key)])
 def receive_dispatch(payload: DispatchToutbox, db: Session = Depends(get_db)):
-    new_dispatch = Dispatch(**payload.dict())
+    data = payload.dict()
+
+    # Mantendo CriacaoPedido separadamente caso precise usá-lo depois
+    criacao_pedido = data.pop("CriacaoPedido", None)
+
+    # Criando a instância de Dispatch sem campos extras
+    new_dispatch = Dispatch(**{key: value for key, value in data.items() if key in Dispatch.__table__.columns.keys()})
+    
     db.add(new_dispatch)
     db.commit()
     db.refresh(new_dispatch)
-    return {"message": "Pedido recebido com sucesso", "id": new_dispatch.id}
-
-@router.get("/dispatch", dependencies=[Depends(verify_api_key)])
-def list_dispatches(db: Session = Depends(get_db)):
-    dispatches = db.query(Dispatch).all()
-    return dispatches
+    
+    return {
+        "message": "Pedido recebido com sucesso",
+        "id": new_dispatch.id,
+        "CriacaoPedido": criacao_pedido  # Opcional: Retornar CriacaoPedido se necessário
+    }
