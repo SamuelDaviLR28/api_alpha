@@ -20,7 +20,12 @@ def get_db():
         db.close()
 
 def verify_api_key(x_api_key: str = Header(None)): 
-    if not x_api_key or x_api_key != API_KEY:
+    if not x_api_key:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="API Key não fornecida"
+        )
+    if x_api_key != API_KEY:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="API Key inválida"
@@ -28,12 +33,10 @@ def verify_api_key(x_api_key: str = Header(None)):
 
 @router.post("/dispatch", dependencies=[Depends(verify_api_key)])
 def receive_dispatch(payload: DispatchToutbox, db: Session = Depends(get_db)):
-    data = payload.dict()
+    data = payload.model_dump()  # Melhor compatibilidade com Pydantic
+    criacao_pedido = data.pop("CriacaoPedido", None)  # Mantendo separadamente
 
-    # Mantendo CriacaoPedido separadamente caso precise usá-lo depois
-    criacao_pedido = data.pop("CriacaoPedido", None)
-
-    # Criando a instância de Dispatch sem campos extras
+    # Filtra os campos válidos antes de criar a instância
     new_dispatch = Dispatch(**{key: value for key, value in data.items() if key in Dispatch.__table__.columns.keys()})
     
     db.add(new_dispatch)
