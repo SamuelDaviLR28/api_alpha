@@ -2,18 +2,18 @@ from pydantic import BaseModel
 from typing import List, Optional, Dict
 
 class Marketplace(BaseModel):
-    Id: Optional[str] = None
-    Nome: Optional[str] = None
+    Id: str
+    Nome: str
 
 class Marca(BaseModel):
-    Id: Optional[str] = None
-    Nome: Optional[str] = None
+    Id: str
+    Nome: str
 
 class Seller(BaseModel):
-    Id: Optional[str] = None
-    RazaoSocial: Optional[str] = None
-    NomeFantasia: Optional[str] = None
-    CNPJ: Optional[str] = None
+    Id: str
+    RazaoSocial: str
+    NomeFantasia: str
+    CNPJ: str
     Contato: Optional[str] = None
     Email: Optional[str] = None
     Endereco: Optional[str] = None
@@ -26,18 +26,18 @@ class Seller(BaseModel):
     CEP: Optional[str] = None
 
 class Produto(BaseModel):
-    Descricao: Optional[str] = None
-    Altura: Optional[float] = None
-    Comprimento: Optional[float] = None
-    Largura: Optional[float] = None
-    Peso: Optional[float] = None
-    Preco: Optional[float] = None
-    Quantidade: Optional[int] = None
-    SKU: Optional[str] = None
+    Descricao: str
+    Altura: float
+    Comprimento: float
+    Largura: float
+    Peso: float
+    Preco: float
+    Quantidade: int
+    SKU: str
 
 class Transportadora(BaseModel):
-    id: Optional[str] = None
-    Nome: Optional[str] = None
+    Id: str
+    Nome: str
     NomeServico: Optional[str] = None
     IdServico: Optional[str] = None
     CodigoRastreio: Optional[str] = None
@@ -50,18 +50,14 @@ class Transportadora(BaseModel):
     DataPrometida: Optional[str] = None
     PrazoDiasUteis: Optional[int] = None
     PrevisaoDeEntrega: Optional[str] = None
-    ValorAR: Optional[float] = None
-    ValorAverbadoPago: Optional[float] = None
     ValorDeclarado: Optional[float] = None
     ValorFrete: Optional[float] = None
 
 class Pessoa(BaseModel):
-    Nome: Optional[str] = None
-    CPFCNPJ: Optional[str] = None
-    IE: Optional[str] = None
+    Nome: str
+    CPFCNPJ: str
     Telefone: Optional[str] = None
     Email: Optional[str] = None
-    Empresa: Optional[str] = None
     Endereco: Optional[str] = None
     Numero: Optional[str] = None
     Complemento: Optional[str] = None
@@ -72,55 +68,53 @@ class Pessoa(BaseModel):
     CEP: Optional[str] = None
 
 class Remetente(BaseModel):
-    Loja: Optional[bool] = None
-    NomeCentroDistribuicao: Optional[str] = None
-    CodigoCentroDistribuicao: Optional[str] = None
-    CPFCNPJ: Optional[str] = None
-    IE: Optional[str] = None
-    Endereco: Optional[str] = None
-    Numero: Optional[str] = None
+    NomeCentroDistribuicao: str
+    CodigoCentroDistribuicao: str
+    CPFCNPJ: str
+    Endereco: str
+    Numero: str
     Complemento: Optional[str] = None
-    Bairro: Optional[str] = None
-    Cidade: Optional[str] = None
-    Estado: Optional[str] = None
-    Pais: Optional[str] = None
-    CEP: Optional[str] = None
+    Bairro: str
+    Cidade: str
+    Estado: str
+    Pais: str
+    CEP: str
 
 class Frete(BaseModel):
-    Transportadora: Optional[Transportadora] = None
-    Destinatario: Optional[Pessoa] = None
-    Tomador: Optional[Pessoa] = None
-    Remetente: Optional[Remetente] = None
+    Transportadora: Transportadora
+    Destinatario: Pessoa
+    Tomador: Pessoa
+    Remetente: Remetente
 
 class Item(BaseModel):
-    IdUnico: Optional[str] = None
+    IdUnico: str
     Volumes: Optional[str] = None
-    Largura: Optional[float] = None
-    Peso: Optional[float] = None
-    Altura: Optional[float] = None
-    Comprimento: Optional[float] = None
+    Largura: float
+    Peso: float
+    Altura: float
+    Comprimento: float
     Formato: Optional[str] = None
-    Produtos: Optional[List[Produto]] = None
-    Frete: Optional[Frete] = None
+    Produtos: List[Produto] = []
+    Frete: Frete
 
 class NotaFiscal(BaseModel):
-    Numero: Optional[str] = None
+    Numero: str
     Serie: Optional[str] = None
     Cfop: Optional[str] = None
     Chave: Optional[str] = None
-    DataEmissao: Optional[str] = None
-    ValorTotal: Optional[float] = None
-    ValorTotalProdutos: Optional[float] = None
+    DataEmissao: str
+    ValorTotal: float
+    ValorTotalProdutos: float
     InfosAdicionais: Optional[Dict[str, str]] = None
 
 class DispatchToutbox(BaseModel):
-    CriacaoPedido: Optional[str] = None
+    CriacaoPedido: str
     DataPagamento: Optional[str] = None
-    NumeroPedido: Optional[str] = None
+    NumeroPedido: str
     NumeroPedidomarketplace: Optional[str] = None
     NumeroPedidoErp: Optional[str] = None
-    Marketplace: Optional[Marketplace] = None
-    Marca: Optional[Marca] = None
-    Seller: Optional[Seller] = None
-    Itens: Optional[List[Item]] = None
-    NotaFiscal: Optional[NotaFiscal] = None
+    Marketplace: Marketplace
+    Marca: Marca
+    Seller: Seller
+    Itens: List[Item] = []
+    NotaFiscal: NotaFiscal
