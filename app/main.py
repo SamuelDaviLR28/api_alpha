@@ -1,12 +1,7 @@
 from fastapi import FastAPI, Header, HTTPException
 from dotenv import load_dotenv
 import os
-from app.dispatch import router as dispatch_router
-from app.patch import router as patch_router
-from app.rastro import router as rastro_router
-from app.motorista import router as motorista_router
-from app.rota import router as rota_router
-from app.cancelamento import router as cancelamento_router
+from app import dispatch, patch, rastro, motorista, rota, cancelamento
 from fastapi import Depends
 
 load_dotenv()
