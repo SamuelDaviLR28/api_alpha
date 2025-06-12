@@ -1,6 +1,1 @@
-from .models import Dispatch
-from .patch import Patch
-from .rastro import Rastro
-from .motorista import Motorista
-from .rota import Rota
-from .cancelamento import Cancelamento
+from .models import Dispatch, Patch, Rastro, Motorista, Rota, Cancelamento
