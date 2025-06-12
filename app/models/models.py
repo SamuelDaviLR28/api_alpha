@@ -20,7 +20,7 @@ class Cancelamento(Base):
     dados = Column(JSON)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-class Patch(Base):
+class PatchFretePrazo(Base):
     __tablename__ = "patches"
     id = Column(Integer, primary_key=True, index=True)
     dados = Column(JSON)
