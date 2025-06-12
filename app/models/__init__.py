@@ -1,1 +1,1 @@
-from .models import dispatch, patch, rastro, motorista, rota, cancelamento
+from .models import Dispatch, Patch, Rastro, Motorista, Rota, Cancelamento
