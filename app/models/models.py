@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, JSON, DateTime
 from sqlalchemy.sql import func
 from app.database import Base
 
+
 class Dispatch(Base):
     __tablename__ = "dispatches"
     id = Column(Integer, primary_key=True, index=True)
