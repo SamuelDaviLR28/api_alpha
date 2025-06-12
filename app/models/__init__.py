@@ -1,1 +1,1 @@
-from .models import Dispatch, Patch, Rastro, Motorista, Rota, Cancelamento
+from .models import Dispatch, PatchFretePrazo, Rastro, Motorista, Rota, Cancelamento
