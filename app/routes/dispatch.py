@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Header, HTTPException, status
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
-from app.models.models import Dispatch
+from app.models import Dispatch
 from app.schemas.dispatch import DispatchToutbox
 import os
 from dotenv import load_dotenv
