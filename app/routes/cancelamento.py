@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
-from app.models.models import Cancelamento
+from app.models import Cancelamento
 
 router = APIRouter()
 
