@@ -1,4 +1,4 @@
-from .dispatch import Dispatch
+from .models import Dispatch
 from .patch import Patch
 from .rastro import Rastro
 from .motorista import Motorista
