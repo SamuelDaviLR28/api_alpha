@@ -10,6 +10,7 @@ DB_URL = os.getenv("DATABASE_URL")
 if DB_URL is None:
     raise ValueError("DATABASE_URL não encontrado no .env")
 
+# Troca para asyncpg, necessário para SQLAlchemy async
 if not DB_URL.startswith("postgresql+asyncpg://"):
     DB_URL = DB_URL.replace("postgresql://", "postgresql+asyncpg://")
 
