@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends, Header, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
 from app.database import SessionLocal
 from app.models import Dispatch
 from app.schemas.dispatch import DispatchToutbox
@@ -38,18 +37,15 @@ async def receive_dispatch(payload: DispatchToutbox, db: AsyncSession = Depends(
 
     criacao_pedido = data.pop("CriacaoPedido", None)
 
-    # Aqui, monte seu dict para os campos que tem no model Dispatch
     dispatch_data = {
         "order_id": data.get("NumeroPedido"),
         "unique_id": data.get("NumeroPedidoErp"),
-        "client_info": data.get("Seller").model_dump() if data.get("Seller") else None,
-        "recipient_info": None,  # Ajuste se tiver dados reais
-        "invoice_info": data.get("NotaFiscal").model_dump() if data.get("NotaFiscal") else None,
+        "client_info": data.get("Seller"),       # já é dict, sem .model_dump()
+        "recipient_info": None,                   # ajuste conforme seu payload
+        "invoice_info": data.get("NotaFiscal"),  # já é dict, sem .model_dump()
         "origin_info": None,
         "volumes": None,
     }
-
-    # Exemplo: você pode preencher os campos JSON com o que precisa conforme seu payload.
 
     new_dispatch = Dispatch(**dispatch_data)
 
