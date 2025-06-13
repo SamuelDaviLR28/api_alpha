@@ -7,6 +7,16 @@ from fastapi import Depends
 load_dotenv()
 app = FastAPI()
 
+from fastapi import FastAPI
+
+app = FastAPI()
+
+
+from app.database import engine
+from app.models import Base
+Base.metadata.create_all(bind=engine)
+
+
 API_KEY = os.getenv("API_KEY")
 
 @app.get("/")
