@@ -1,13 +1,16 @@
 from pydantic import BaseModel, validator
 from typing import List, Optional, Dict
 
+
 class Marketplace(BaseModel):
     Id: str
     Nome: str
 
+
 class Marca(BaseModel):
     Id: str
     Nome: str
+
 
 class Seller(BaseModel):
     Id: str
@@ -31,6 +34,7 @@ class Seller(BaseModel):
             raise ValueError("CNPJ inválido")
         return value
 
+
 class Produto(BaseModel):
     Descricao: str
     Altura: float
@@ -40,6 +44,7 @@ class Produto(BaseModel):
     Preco: float
     Quantidade: int
     SKU: str
+
 
 class Transportadora(BaseModel):
     Id: str
@@ -58,6 +63,7 @@ class Transportadora(BaseModel):
     PrevisaoDeEntrega: Optional[str] = None
     ValorDeclarado: Optional[float] = None
     ValorFrete: Optional[float] = None
+
 
 class Pessoa(BaseModel):
     Nome: str
@@ -79,6 +85,7 @@ class Pessoa(BaseModel):
             raise ValueError("CPF/CNPJ inválido")
         return value
 
+
 class Remetente(BaseModel):
     NomeCentroDistribuicao: str
     CodigoCentroDistribuicao: str
@@ -92,11 +99,13 @@ class Remetente(BaseModel):
     Pais: str
     CEP: str
 
+
 class Frete(BaseModel):
     Transportadora: Transportadora
     Destinatario: Pessoa
     Tomador: Pessoa
     Remetente: Remetente
+
 
 class Item(BaseModel):
     IdUnico: str
@@ -109,6 +118,7 @@ class Item(BaseModel):
     Produtos: List[Produto] = []
     Frete: Frete
 
+
 class NotaFiscal(BaseModel):
     Numero: str
     Serie: Optional[str] = None
@@ -118,6 +128,7 @@ class NotaFiscal(BaseModel):
     ValorTotal: float
     ValorTotalProdutos: float
     InfosAdicionais: Optional[Dict[str, str]] = None
+
 
 class DispatchToutbox(BaseModel):
     CriacaoPedido: str
