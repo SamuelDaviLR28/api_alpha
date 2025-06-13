@@ -5,28 +5,22 @@ import os
 from app.routes import dispatch, patch, rastro, motorista, rota, cancelamento
 from app.database import engine, Base
 
-import asyncio
-
-
+# Carrega variáveis de ambiente
 load_dotenv()
-
 
 app = FastAPI()
 
-
 API_KEY = os.getenv("API_KEY")
-
 
 def verify_api_key(x_api_key: str = Header(...)):
     if x_api_key != API_KEY:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
-
 @app.get("/")
 def root():
     return {"message": "API rodando online com sucesso!"}
 
-
+# Inclui rotas com verificação da API Key
 app.include_router(dispatch.router, dependencies=[Depends(verify_api_key)])
 app.include_router(patch.router, dependencies=[Depends(verify_api_key)])
 app.include_router(rastro.router, dependencies=[Depends(verify_api_key)])
@@ -34,10 +28,8 @@ app.include_router(motorista.router, dependencies=[Depends(verify_api_key)])
 app.include_router(rota.router, dependencies=[Depends(verify_api_key)])
 app.include_router(cancelamento.router, dependencies=[Depends(verify_api_key)])
 
-
-async def create_tables():
+# Executa criação das tabelas no evento de startup do FastAPI
+@app.on_event("startup")
+async def startup_event():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-
-
-asyncio.run(create_tables())
