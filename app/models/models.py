@@ -14,11 +14,13 @@ class Dispatch(Base):
     origin_info = Column(JSON)
     volumes = Column(JSON)
 
+
 class Cancelamento(Base):
     __tablename__ = "cancelamentos"
     id = Column(Integer, primary_key=True, index=True)
     dados = Column(JSON)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
 
 class PatchFretePrazo(Base):
     __tablename__ = "patches"
@@ -26,17 +28,20 @@ class PatchFretePrazo(Base):
     dados = Column(JSON)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
+
 class Rastro(Base):
     __tablename__ = "rastros"
     id = Column(Integer, primary_key=True, index=True)
     dados = Column(JSON)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
+
 class Motorista(Base):
     __tablename__ = "motoristas"
     id = Column(Integer, primary_key=True, index=True)
     dados = Column(JSON)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
 
 class Rota(Base):
     __tablename__ = "rotas"
