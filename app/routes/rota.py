@@ -15,7 +15,10 @@ def get_db():
 
 @router.post("/rota", status_code=status.HTTP_201_CREATED)
 def post_rota(payload: RotaPayload, db: Session = Depends(get_db)):
-    novo = Rota(dados=payload.dict())
+    # Extrai o dicionário interno do __root__
+    dados = payload.__root__
+
+    novo = Rota(dados=dados)
     db.add(novo)
     db.commit()
     db.refresh(novo)
