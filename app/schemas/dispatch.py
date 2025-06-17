@@ -33,7 +33,7 @@ class Destinatario(BaseModel):
     Telefone: Optional[str] = None
     TelefoneFixo: Optional[str] = None
     TelefoneAdicional: Optional[str] = None
-    Email: Optional[EmailStr] = None
+    Email: Optional[str] = None  
     Empresa: Optional[str] = None
     Endereco: Optional[str] = None
     Numero: Optional[str] = None
