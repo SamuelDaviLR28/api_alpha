@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, Header, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from typing import Any, Optional
 import os
 
 from app.database import SessionLocal
@@ -24,7 +23,8 @@ async def receive_dispatch(
     payload: DispatchToutbox,
     db: AsyncSession = Depends(get_db)
 ):
-    data = payload.model_dump(exclude_none=True)
+    # Removendo exclude_none=True para manter os campos nulos
+    data = payload.model_dump()
 
     # Verificar se o pedido já existe
     unique_id = data.get("NumeroPedidoErp")
