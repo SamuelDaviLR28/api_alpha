@@ -2,6 +2,7 @@ from pydantic import BaseModel, EmailStr
 from typing import List, Optional
 from datetime import datetime
 
+
 class Produto(BaseModel):
     Descricao: Optional[str] = None
     Preco: Optional[float] = None
@@ -105,7 +106,8 @@ class InfosAdicionais(BaseModel):
     EntregaAgendada: Optional[bool] = None
     Portabilidade: Optional[bool] = None
 
-class Pedido(BaseModel):
+
+class DispatchToutbox(BaseModel):
     CriacaoPedido: Optional[datetime] = None
     NumeroPedido: Optional[str] = None
     NumeroPedidoMarketplace: Optional[str] = None
@@ -115,9 +117,3 @@ class Pedido(BaseModel):
     Itens: Optional[List[Item]] = None
     NotaFiscal: Optional[NotaFiscal] = None
     InfosAdicionais: Optional[InfosAdicionais] = None
-
-class DispatchToutbox(BaseModel):
-    pedido: Pedido
-
-class DispatchToutbox(BaseModel):
-    pedidos: List[Pedido]
