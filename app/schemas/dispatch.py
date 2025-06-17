@@ -132,3 +132,15 @@ class DispatchToutbox(BaseModel):
 
     NotaFiscal:       Optional[NotaFiscal]       = None
     InfosAdicionais:  Optional[InfosAdicionais]  = None
+
+Produto.model_rebuild()
+Transportadora.model_rebuild()
+Destinatario.model_rebuild()
+Remetente.model_rebuild()
+Tomador.model_rebuild()
+Frete.model_rebuild()
+Item.model_rebuild()
+CanalDeVenda.model_rebuild()
+NotaFiscal.model_rebuild()
+InfosAdicionais.model_rebuild()
+DispatchToutbox.model_rebuild()
