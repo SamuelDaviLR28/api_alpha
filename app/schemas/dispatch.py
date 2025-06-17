@@ -118,3 +118,6 @@ class Pedido(BaseModel):
 
 class DispatchToutbox(BaseModel):
     pedido: Pedido
+
+class DispatchToutbox(BaseModel):
+    pedidos: List[Pedido]
