@@ -1,143 +1,117 @@
-from pydantic import BaseModel, validator
-from typing import List, Optional, Dict
-
-
-class Marketplace(BaseModel):
-    Id: str
-    Nome: str
-
-
-class Marca(BaseModel):
-    Id: str
-    Nome: str
-
-
-class Seller(BaseModel):
-    Id: str
-    RazaoSocial: str
-    NomeFantasia: str
-    CNPJ: str
-    Contato: Optional[str] = None
-    Email: Optional[str] = None
-    Endereco: Optional[str] = None
-    Numero: Optional[str] = None
-    Complemento: Optional[str] = None
-    Bairro: Optional[str] = None
-    Cidade: Optional[str] = None
-    Estado: Optional[str] = None
-    Pais: Optional[str] = None
-    CEP: Optional[str] = None
-
-    @validator("CNPJ")
-    def validar_cnpj(cls, value):
-        if value and not value.replace(".", "").replace("/", "").replace("-", "").isdigit():
-            raise ValueError("CNPJ inválido")
-        return value
-
+from pydantic import BaseModel, EmailStr
+from typing import List, Optional
+from datetime import datetime
 
 class Produto(BaseModel):
     Descricao: str
-    Altura: float
-    Comprimento: float
-    Largura: float
-    Peso: float
     Preco: float
     Quantidade: int
     SKU: str
-
+    NumeroDeSerie: str
 
 class Transportadora(BaseModel):
     Id: str
     Nome: str
-    NomeServico: Optional[str] = None
-    IdServico: Optional[str] = None
-    CodigoRastreio: Optional[str] = None
-    ListaPostagem: Optional[str] = None
-    CNPJ: Optional[str] = None
-    Reversa: Optional[bool] = None
-    CodigoAutorizacao: Optional[str] = None
-    Coleta: Optional[bool] = None
-    EntregaAgendada: Optional[bool] = None
-    DataPrometida: Optional[str] = None
-    PrazoDiasUteis: Optional[int] = None
-    PrevisaoDeEntrega: Optional[str] = None
-    ValorDeclarado: Optional[float] = None
-    ValorFrete: Optional[float] = None
+    NomeServico: str
+    IdServico: str
+    CodigoRastreio: str
+    ListaPostagem: str
+    Reversa: bool
+    Coleta: bool
+    Dispatch: bool
+    AlocacaoAutomatica: bool
+    ValorAR: float
+    ValorAverbadoPago: float
+    ValorDeclarado: float
+    ValorFrete: float
+    Prioridade: bool
 
-
-class Pessoa(BaseModel):
+class Destinatario(BaseModel):
     Nome: str
     CPFCNPJ: str
-    Telefone: Optional[str] = None
-    Email: Optional[str] = None
-    Endereco: Optional[str] = None
-    Numero: Optional[str] = None
-    Complemento: Optional[str] = None
-    Bairro: Optional[str] = None
-    Cidade: Optional[str] = None
-    Estado: Optional[str] = None
-    Pais: Optional[str] = None
-    CEP: Optional[str] = None
-
-    @validator("CPFCNPJ")
-    def validar_cpf_cnpj(cls, value):
-        if value and not value.replace(".", "").replace("/", "").replace("-", "").isdigit():
-            raise ValueError("CPF/CNPJ inválido")
-        return value
-
-
-class Remetente(BaseModel):
-    NomeCentroDistribuicao: str
-    CodigoCentroDistribuicao: str
-    CPFCNPJ: str
+    Telefone: str
+    TelefoneFixo: str
+    TelefoneAdicional: str
+    Email: EmailStr
+    Empresa: str
     Endereco: str
     Numero: str
-    Complemento: Optional[str] = None
+    Complemento: str
     Bairro: str
     Cidade: str
     Estado: str
     Pais: str
     CEP: str
+    IE: str
 
+class Remetente(BaseModel):
+    Nome: str
+    NomeCentroDistribuicao: str
+    CodigoCentroDistribuicao: str
+    Endereco: str
+    Numero: str
+    Complemento: str
+    Bairro: str
+    Cidade: str
+    Estado: str
+    Pais: str
+    CEP: str
+    IE: str
+    CPFCNPJ: str
+
+class Tomador(BaseModel):
+    Nome: str
+    Endereco: str
+    Numero: str
+    Complemento: str
+    Bairro: str
+    Cidade: str
+    Estado: str
+    Pais: str
+    CEP: str
+    IE: Optional[str] = None
+    CPFCNPJ: str
 
 class Frete(BaseModel):
     Transportadora: Transportadora
-    Destinatario: Pessoa
-    Tomador: Pessoa
+    Destinatario: Destinatario
     Remetente: Remetente
-
+    Tomador: Tomador
 
 class Item(BaseModel):
     IdUnico: str
-    Volumes: Optional[str] = None
+    QuantidadeProdutos: int
+    Volumes: int
     Largura: float
     Peso: float
     Altura: float
     Comprimento: float
-    Formato: Optional[str] = None
-    Produtos: List[Produto] = []
+    Produtos: List[Produto]
     Frete: Frete
 
+class CanalDeVenda(BaseModel):
+    Id: str
+    Nome: str
 
 class NotaFiscal(BaseModel):
-    Numero: str
-    Serie: Optional[str] = None
-    Cfop: Optional[str] = None
-    Chave: Optional[str] = None
-    DataEmissao: str
+    DataEmissao: datetime
+    Numero: int
+    Serie: int
+    Chave: str
     ValorTotal: float
     ValorTotalProdutos: float
-    InfosAdicionais: Optional[Dict[str, str]] = None
 
+class InfosAdicionais(BaseModel):
+    EntregaAgendada: bool
+    Portabilidade: bool
 
-class DispatchToutbox(BaseModel):
-    CriacaoPedido: str
-    DataPagamento: Optional[str] = None
+class Pedido(BaseModel):
+    CriacaoPedido: datetime
     NumeroPedido: str
-    NumeroPedidomarketplace: Optional[str] = None
-    NumeroPedidoErp: Optional[str] = None
-    Marketplace: Marketplace
-    Marca: Marca
-    Seller: Seller
-    Itens: List[Item] = []
+    NumeroPedidoMarketplace: str
+    NumeroPedidoErp: str
+    NumeroPedidoAux: str
+    CanalDeVenda: CanalDeVenda
+    Itens: List[Item]
     NotaFiscal: NotaFiscal
+    InfosAdicionais: InfosAdicionais
