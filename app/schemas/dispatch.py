@@ -108,10 +108,13 @@ class InfosAdicionais(BaseModel):
 class Pedido(BaseModel):
     CriacaoPedido: Optional[datetime] = None
     NumeroPedido: Optional[str] = None
-    NumeroPedidoMarketplace: Optional[str] = None  # marketplace opcional
+    NumeroPedidoMarketplace: Optional[str] = None
     NumeroPedidoErp: Optional[str] = None
     NumeroPedidoAux: Optional[str] = None
     CanalDeVenda: Optional[CanalDeVenda] = None
     Itens: Optional[List[Item]] = None
     NotaFiscal: Optional[NotaFiscal] = None
     InfosAdicionais: Optional[InfosAdicionais] = None
+
+class DispatchToutbox(BaseModel):
+    pedido: Pedido
