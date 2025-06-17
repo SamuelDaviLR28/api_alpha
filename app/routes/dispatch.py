@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Header, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from typing import Any
+from typing import Any, Optional
 import os
 
 from app.database import SessionLocal
@@ -24,12 +24,9 @@ async def receive_dispatch(
     payload: DispatchToutbox,
     db: AsyncSession = Depends(get_db)
 ):
-    # Transformar Pydantic para dict incluindo campos None
-    data = payload.model_dump(exclude_none=False)
+    data = payload.model_dump(exclude_none=True)
 
-    # Normalizar para remover chaves com valor None
-    data = normalize_none_fields(data)
-
+    # Verificar se o pedido já existe
     unique_id = data.get("NumeroPedidoErp")
     if unique_id:
         q = select(Dispatch).filter(Dispatch.unique_id == unique_id)
@@ -37,34 +34,31 @@ async def receive_dispatch(
         if res.scalars().first():
             return {"message": "Dispatch já cadastrado", "unique_id": unique_id}
 
-    # Serializar objetos aninhados para dicionários simples
-    invoice_info = data.get("NotaFiscal")
-    if invoice_info and not isinstance(invoice_info, dict):
-        invoice_info = invoice_info.model_dump() if hasattr(invoice_info, "model_dump") else invoice_info
+    # Extrair dados principais
+    order_id = data.get("NumeroPedido")
+    canal_de_venda = data.get("CanalDeVenda")
+    nota_fiscal = data.get("NotaFiscal")
+    itens = data.get("Itens", [])
 
-    origin_info = data.get("CanalDeVenda")
-    if origin_info and not isinstance(origin_info, dict):
-        origin_info = origin_info.model_dump() if hasattr(origin_info, "model_dump") else origin_info
-
-    volumes = data.get("Itens")
-    if volumes and isinstance(volumes, list):
-        volumes = [
-            v.model_dump() if hasattr(v, "model_dump") else v
-            for v in volumes
-        ]
+    # Primeiro item (se existir) para pegar info do frete
+    primeiro_frete = itens[0].get("Frete") if itens else None
+    destinatario = primeiro_frete.get("Destinatario") if primeiro_frete else None
+    remetente = primeiro_frete.get("Remetente") if primeiro_frete else None
 
     dispatch_data = {
-        "order_id": data.get("NumeroPedido"),
+        "order_id": order_id,
         "unique_id": unique_id,
-        "client_info": None,  # Pode preencher conforme necessário
-        "recipient_info": None,
-        "invoice_info": invoice_info,
-        "origin_info": origin_info,
-        "volumes": volumes,
+        "client_info": canal_de_venda,
+        "recipient_info": destinatario,
+        "invoice_info": nota_fiscal,
+        "origin_info": remetente,
+        "volumes": itens
     }
 
+    # Criar novo dispatch
     novo = Dispatch(**dispatch_data)
     db.add(novo)
     await db.commit()
     await db.refresh(novo)
+
     return {"message": "Pedido recebido com sucesso", "id": novo.id}
