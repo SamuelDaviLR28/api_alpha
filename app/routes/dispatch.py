@@ -1,3 +1,4 @@
+from fastapi.encoders import jsonable_encoder
 from fastapi import APIRouter, Depends, Header, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -23,10 +24,8 @@ async def receive_dispatch(
     payload: DispatchToutbox,
     db: AsyncSession = Depends(get_db)
 ):
-    # Removendo exclude_none=True para manter os campos nulos
     data = payload.model_dump()
 
-    # Verificar se o pedido já existe
     unique_id = data.get("NumeroPedidoErp")
     if unique_id:
         q = select(Dispatch).filter(Dispatch.unique_id == unique_id)
@@ -34,28 +33,26 @@ async def receive_dispatch(
         if res.scalars().first():
             return {"message": "Dispatch já cadastrado", "unique_id": unique_id}
 
-    # Extrair dados principais
     order_id = data.get("NumeroPedido")
     canal_de_venda = data.get("CanalDeVenda")
     nota_fiscal = data.get("NotaFiscal")
     itens = data.get("Itens", [])
 
-    # Primeiro item (se existir) para pegar info do frete
     primeiro_frete = itens[0].get("Frete") if itens else None
     destinatario = primeiro_frete.get("Destinatario") if primeiro_frete else None
     remetente = primeiro_frete.get("Remetente") if primeiro_frete else None
 
+    # Use jsonable_encoder para transformar os dados em JSON serializáveis
     dispatch_data = {
         "order_id": order_id,
         "unique_id": unique_id,
-        "client_info": canal_de_venda,
-        "recipient_info": destinatario,
-        "invoice_info": nota_fiscal,
-        "origin_info": remetente,
-        "volumes": itens
+        "client_info": jsonable_encoder(canal_de_venda),
+        "recipient_info": jsonable_encoder(destinatario),
+        "invoice_info": jsonable_encoder(nota_fiscal),
+        "origin_info": jsonable_encoder(remetente),
+        "volumes": jsonable_encoder(itens),
     }
 
-    # Criar novo dispatch
     novo = Dispatch(**dispatch_data)
     db.add(novo)
     await db.commit()
