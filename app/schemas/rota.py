@@ -153,3 +153,9 @@ class DispatchToutbox(BaseModel):
     Itens: List[Item]
     NotaFiscal: NotaFiscal
     InfosAdicionais: Optional[InfosAdicionais] = None
+
+class RotaPayload(BaseModel):
+    NumeroPedido: str
+    NumeroPedidoErp: Optional[str] = None
+    Itens: List[Item]
+
