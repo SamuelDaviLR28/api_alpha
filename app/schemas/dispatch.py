@@ -1,13 +1,13 @@
 from typing import Optional, List
 from pydantic import BaseModel, EmailStr
 
+
 class CanalDeVendaModel(BaseModel):
     Codigo: Optional[str] = None
     Nome:   Optional[str] = None
 
-
 class Produto(BaseModel):
-    Descricao:      Optional[str] = None
+    Descricao:      Optional[str]  = None
     Altura:         Optional[float] = None
     Comprimento:    Optional[float] = None
     Largura:        Optional[float] = None
@@ -75,17 +75,17 @@ class Pessoa(BaseModel):
     CodigoCentroDistribuicao: Optional[str] = None
 
 class Tomador(BaseModel):
-    Nome:        Optional[str] = None
-    Endereco:    Optional[str] = None
-    Numero:      Optional[str] = None
+    Nome: Optional[str] = None
+    Endereco: Optional[str] = None
+    Numero: Optional[str] = None
     Complemento: Optional[str] = None
-    Bairro:      Optional[str] = None
-    Cidade:      Optional[str] = None
-    Estado:      Optional[str] = None
-    Pais:        Optional[str] = None
-    CEP:         Optional[str] = None
-    IE:          Optional[str] = None
-    CPFCNPJ:     Optional[str] = None
+    Bairro: Optional[str] = None
+    Cidade: Optional[str] = None
+    Estado: Optional[str] = None
+    Pais: Optional[str] = None
+    CEP: Optional[str] = None
+    IE: Optional[str] = None
+    CPFCNPJ: Optional[str] = None
 
 class Frete(BaseModel):
     Transportadora: Optional[Transportadora] = None
@@ -103,7 +103,7 @@ class Item(BaseModel):
     Comprimento:        Optional[float] = None
     Formato:            Optional[str]   = None
     Produtos:           Optional[List[Produto]] = None
-    Frete:              Optional[Frete] = None
+    Frete:              Optional[Frete] = None   
 
 class NotaFiscal(BaseModel):
     DataEmissao:        Optional[str]  = None
@@ -148,5 +148,5 @@ class DispatchToutbox(BaseModel):
     Rede:                    Optional[str] = None
     Campanha:                Optional[str] = None
     Itens:                   Optional[List[Item]] = None
-    NotaFiscal:              Optional[NotaFiscal] = None
+    NotaFiscal:              Optional[NotaFiscal] = None   
     InfosAdicionais:         Optional[InfosAdicionais] = None
