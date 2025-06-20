@@ -1,9 +1,6 @@
-from pydantic import BaseModel
 from typing import Optional, List
-from app.schemas.dispatch import DispatchToutbox
+from pydantic import BaseModel
 
-class RotaPayload(DispatchToutbox):
-    pass
 
 class Produto(BaseModel):
     Descricao: Optional[str] = None
@@ -18,6 +15,7 @@ class Produto(BaseModel):
     NumeroDeSerie: Optional[str] = None
     TipoProduto: Optional[str] = None
     Fabricante: Optional[str] = None
+
 
 class Transportadora(BaseModel):
     PrevisaoDeEntrega: Optional[str] = None
@@ -49,6 +47,7 @@ class Transportadora(BaseModel):
     TipoPrioridade: Optional[str] = None
     ServicosAdicionais: Optional[str] = None
 
+
 class Pessoa(BaseModel):
     Nome: Optional[str] = None
     CPFCNPJ: Optional[str] = None
@@ -73,6 +72,7 @@ class Pessoa(BaseModel):
     NomeCentroDistribuicao: Optional[str] = None
     CodigoCentroDistribuicao: Optional[str] = None
 
+
 class Tomador(BaseModel):
     Nome: Optional[str] = None
     Endereco: Optional[str] = None
@@ -86,11 +86,13 @@ class Tomador(BaseModel):
     IE: Optional[str] = None
     CPFCNPJ: Optional[str] = None
 
+
 class Frete(BaseModel):
     Transportadora: Optional[Transportadora] = None
     Destinatario: Optional[Pessoa] = None
     Remetente: Optional[Pessoa] = None
     Tomador: Optional[Tomador] = None
+
 
 class Item(BaseModel):
     IdUnico: Optional[str] = None
@@ -104,6 +106,7 @@ class Item(BaseModel):
     Produtos: Optional[List[Produto]] = None
     Frete: Optional[Frete] = None
 
+
 class NotaFiscal(BaseModel):
     DataEmissao: Optional[str] = None
     Numero: Optional[int] = None
@@ -113,6 +116,7 @@ class NotaFiscal(BaseModel):
     ValorTotal: Optional[float] = None
     ValorTotalProdutos: Optional[float] = None
     StringXML: Optional[str] = None
+
 
 class InfosAdicionais(BaseModel):
     CartaoPostagem: Optional[str] = None
@@ -128,6 +132,7 @@ class InfosAdicionais(BaseModel):
     IdDestinatario: Optional[str] = None
     Portabilidade: Optional[bool] = None
     SegmentoCliente: Optional[str] = None
+
 
 class DispatchToutbox(BaseModel):
     CriacaoPedido: Optional[str] = None
