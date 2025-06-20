@@ -5,6 +5,10 @@ from app.schemas.dispatch import DispatchToutbox
 class RotaPayload(DispatchToutbox):
     pass
 
+class CanalDeVendaModel(BaseModel):
+    Codigo: Optional[str] = None
+    Nome: Optional[str] = None
+
 class Produto(BaseModel):
     Descricao: Optional[str] = None
     Altura: Optional[float] = None
@@ -157,6 +161,4 @@ class DispatchToutbox(BaseModel):
     NotaFiscal: Optional[dict] = None  
     InfosAdicionais: Optional[dict] = None  
 
-class CanalDeVendaModel(BaseModel):
-    Codigo: Optional[str] = None
-    Nome: Optional[str] = None
+
