@@ -1,5 +1,12 @@
 from pydantic import BaseModel
 from typing import Optional, List
+from app.schemas.dispatch import Item 
+
+class RotaPayload(BaseModel):
+    NumeroPedido: str
+    NumeroPedidoErp: Optional[str] = None
+    Itens: List[Item]
+
 
 
 class Produto(BaseModel):
