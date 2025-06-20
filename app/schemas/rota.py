@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from app.schemas.dispatch import DispatchToutbox
 
 class RotaPayload(DispatchToutbox):
-    pas
+    pass
 
 class Produto(BaseModel):
     Descricao: Optional[str] = None
