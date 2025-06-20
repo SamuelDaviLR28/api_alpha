@@ -109,8 +109,7 @@ class Item(BaseModel):
     Comprimento: Optional[float] = None
     Formato: Optional[str] = None
     Produtos: Optional[List[Produto]] = None
-    Frete: Optional[Frete] = Field(default=None)
-
+    Frete: Optional["Frete"] = None  
 
 class NotaFiscal(BaseModel):
     DataEmissao: Optional[str] = None
@@ -158,3 +157,9 @@ class DispatchToutbox(BaseModel):
     Itens: Optional[List[Item]] = Field(default=None)
     NotaFiscal: Optional[NotaFiscal] = Field(default=None)
     InfosAdicionais: Optional[InfosAdicionais] = Field(default=None)
+
+
+
+DispatchToutbox.update_forward_refs()
+Item.update_forward_refs()
+Frete.update_forward_refs()
