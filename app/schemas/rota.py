@@ -148,11 +148,15 @@ class DispatchToutbox(BaseModel):
     Marketplace: Optional[str] = None
     Marca: Optional[str] = None
     Seller: Optional[str] = None
-    CanalDeVenda: Optional[dict] = None
+    CanalDeVenda: Optional[CanalDeVendaModel] = None  
     Warehouse: Optional[str] = None
     UnidadeDeNegocio: Optional[str] = None
     Rede: Optional[str] = None
     Campanha: Optional[str] = None
-    Itens: Optional[List[Item]] = None
-    NotaFiscal: Optional[NotaFiscal] = None
-    InfosAdicionais: Optional[InfosAdicionais] = None
+    Itens: Optional[List] = None  
+    NotaFiscal: Optional[dict] = None  
+    InfosAdicionais: Optional[dict] = None  
+
+class CanalDeVendaModel(BaseModel):
+    Codigo: Optional[str] = None
+    Nome: Optional[str] = None
