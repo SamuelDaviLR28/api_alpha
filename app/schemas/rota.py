@@ -1,5 +1,9 @@
 from pydantic import BaseModel
 from typing import Optional, List
+from app.schemas.dispatch import DispatchToutbox
+
+class RotaPayload(DispatchToutbox):
+    pass
 
 class Produto(BaseModel):
     Descricao: Optional[str] = None
