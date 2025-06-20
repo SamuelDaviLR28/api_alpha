@@ -1,28 +1,19 @@
 from pydantic import BaseModel
 from typing import Optional, List
-from app.schemas.dispatch import Item 
-
-class RotaPayload(BaseModel):
-    NumeroPedido: str
-    NumeroPedidoErp: Optional[str] = None
-    Itens: List[Item]
-
-
 
 class Produto(BaseModel):
-    Descricao: str
+    Descricao: Optional[str] = None
     Altura: Optional[float] = None
     Comprimento: Optional[float] = None
     Largura: Optional[float] = None
     Peso: Optional[float] = None
-    Preco: float
-    Quantidade: int
-    SKU: str
+    Preco: Optional[float] = None
+    Quantidade: Optional[int] = None
+    SKU: Optional[str] = None
     CodigoProduto: Optional[str] = None
-    NumeroDeSerie: str
+    NumeroDeSerie: Optional[str] = None
     TipoProduto: Optional[str] = None
     Fabricante: Optional[str] = None
-
 
 class Transportadora(BaseModel):
     PrevisaoDeEntrega: Optional[str] = None
@@ -54,9 +45,8 @@ class Transportadora(BaseModel):
     TipoPrioridade: Optional[str] = None
     ServicosAdicionais: Optional[str] = None
 
-
 class Pessoa(BaseModel):
-    Nome: str
+    Nome: Optional[str] = None
     CPFCNPJ: Optional[str] = None
     Telefone: Optional[str] = None
     TelefoneFixo: Optional[str] = None
@@ -79,7 +69,6 @@ class Pessoa(BaseModel):
     NomeCentroDistribuicao: Optional[str] = None
     CodigoCentroDistribuicao: Optional[str] = None
 
-
 class Tomador(BaseModel):
     Nome: Optional[str] = None
     Endereco: Optional[str] = None
@@ -93,18 +82,16 @@ class Tomador(BaseModel):
     IE: Optional[str] = None
     CPFCNPJ: Optional[str] = None
 
-
 class Frete(BaseModel):
     Transportadora: Optional[Transportadora] = None
     Destinatario: Optional[Pessoa] = None
     Remetente: Optional[Pessoa] = None
     Tomador: Optional[Tomador] = None
 
-
 class Item(BaseModel):
-    IdUnico: str
-    QuantidadeProdutos: int
-    Volumes: int
+    IdUnico: Optional[str] = None
+    QuantidadeProdutos: Optional[int] = None
+    Volumes: Optional[int] = None
     Largura: Optional[float] = None
     Peso: Optional[float] = None
     Altura: Optional[float] = None
@@ -113,17 +100,15 @@ class Item(BaseModel):
     Produtos: Optional[List[Produto]] = None
     Frete: Optional[Frete] = None
 
-
 class NotaFiscal(BaseModel):
-    DataEmissao: str
-    Numero: int
-    Serie: int
+    DataEmissao: Optional[str] = None
+    Numero: Optional[int] = None
+    Serie: Optional[int] = None
     Cfop: Optional[str] = None
     Chave: Optional[str] = None
-    ValorTotal: float
-    ValorTotalProdutos: float
+    ValorTotal: Optional[float] = None
+    ValorTotalProdutos: Optional[float] = None
     StringXML: Optional[str] = None
-
 
 class InfosAdicionais(BaseModel):
     CartaoPostagem: Optional[str] = None
@@ -140,11 +125,10 @@ class InfosAdicionais(BaseModel):
     Portabilidade: Optional[bool] = None
     SegmentoCliente: Optional[str] = None
 
-
 class DispatchToutbox(BaseModel):
-    CriacaoPedido: str
+    CriacaoPedido: Optional[str] = None
     DataPagamento: Optional[str] = None
-    NumeroPedido: str
+    NumeroPedido: Optional[str] = None
     NumeroPedidoMarketplace: Optional[str] = None
     NumeroPedidoErp: Optional[str] = None
     IdsAuxiliares: Optional[str] = None
@@ -157,6 +141,6 @@ class DispatchToutbox(BaseModel):
     UnidadeDeNegocio: Optional[str] = None
     Rede: Optional[str] = None
     Campanha: Optional[str] = None
-    Itens: List[Item]
-    NotaFiscal: NotaFiscal
+    Itens: Optional[List[Item]] = None
+    NotaFiscal: Optional[NotaFiscal] = None
     InfosAdicionais: Optional[InfosAdicionais] = None
