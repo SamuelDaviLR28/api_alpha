@@ -26,23 +26,23 @@ async def receive_dispatch(
 ):
     data = payload.model_dump()
 
-    unique_id = data.get("NumeroPedidoErp")
+    unique_id = payload.NumeroPedidoErp
     if unique_id:
         q = select(Dispatch).filter(Dispatch.unique_id == unique_id)
         res = await db.execute(q)
         if res.scalars().first():
             return {"message": "Dispatch já cadastrado", "unique_id": unique_id}
 
-    order_id = data.get("NumeroPedido")
-    canal_de_venda = data.get("CanalDeVenda")
-    nota_fiscal = data.get("NotaFiscal")
-    itens = data.get("Itens", [])
+    order_id = payload.NumeroPedido
+    canal_de_venda = payload.CanalDeVenda  # se for dict
+    nota_fiscal = payload.NotaFiscal
+    itens = payload.Itens or []
 
-    primeiro_frete = itens[0].get("Frete") if itens else None
-    destinatario = primeiro_frete.get("Destinatario") if primeiro_frete else None
-    remetente = primeiro_frete.get("Remetente") if primeiro_frete else None
+    primeiro_item = itens[0] if itens else None
+    frete = primeiro_item.Frete if primeiro_item and primeiro_item.Frete else None
+    destinatario = frete.Destinatario if frete else None
+    remetente = frete.Remetente if frete else None
 
-    # Use jsonable_encoder para transformar os dados em JSON serializáveis
     dispatch_data = {
         "order_id": order_id,
         "unique_id": unique_id,
@@ -59,3 +59,4 @@ async def receive_dispatch(
     await db.refresh(novo)
 
     return {"message": "Pedido recebido com sucesso", "id": novo.id}
+
