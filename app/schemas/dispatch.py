@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import List, Optional, Union
 from pydantic import BaseModel
 
-
+# PRODUTO
 class Produto(BaseModel):
     Descricao: Optional[str] = None
     Altura: Optional[float] = None
@@ -19,7 +19,7 @@ class Produto(BaseModel):
 
     model_config = {"extra": "allow"}
 
-
+# TRANSPORTADORA
 class Transportadora(BaseModel):
     Id: Optional[str] = None
     Nome: Optional[str] = None
@@ -53,7 +53,7 @@ class Transportadora(BaseModel):
 
     model_config = {"extra": "allow"}
 
-
+# PESSOA GENÉRICA
 class Pessoa(BaseModel):
     Nome: Optional[str] = None
     CPFCNPJ: Optional[str] = None
@@ -80,11 +80,10 @@ class Pessoa(BaseModel):
 
     model_config = {"extra": "allow"}
 
-
 class Tomador(Pessoa):
     pass
 
-
+# FRETE
 class Frete(BaseModel):
     Transportadora: Optional[Transportadora] = None
     Destinatario: Optional[Pessoa] = None
@@ -93,7 +92,7 @@ class Frete(BaseModel):
 
     model_config = {"extra": "allow"}
 
-
+# ITEM
 class Item(BaseModel):
     IdUnico: Optional[str] = None
     QuantidadeProdutos: Optional[int] = None
@@ -108,7 +107,7 @@ class Item(BaseModel):
 
     model_config = {"extra": "allow"}
 
-
+# INFOS ADICIONAIS
 class InfosAdicionais(BaseModel):
     CartaoPostagem: Optional[str] = None
     CodigoAdmnistrativo: Optional[str] = None
@@ -126,7 +125,7 @@ class InfosAdicionais(BaseModel):
 
     model_config = {"extra": "allow"}
 
-
+# NOTA FISCAL
 class NotaFiscal(BaseModel):
     Numero: Optional[Union[int, str]] = None
     Serie: Optional[Union[int, str]] = None
@@ -140,20 +139,18 @@ class NotaFiscal(BaseModel):
 
     model_config = {"extra": "allow"}
 
-
+# DEMAIS OBJETOS
 class Marketplace(BaseModel):
     Id: Optional[str] = None
     Nome: Optional[str] = None
 
     model_config = {"extra": "allow"}
 
-
 class Marca(BaseModel):
     Id: Optional[str] = None
     Nome: Optional[str] = None
 
     model_config = {"extra": "allow"}
-
 
 class Seller(BaseModel):
     Id: Optional[str] = None
@@ -173,7 +170,13 @@ class Seller(BaseModel):
 
     model_config = {"extra": "allow"}
 
+class CanalDeVenda(BaseModel):
+    Id: Optional[str] = None
+    Nome: Optional[str] = None
 
+    model_config = {"extra": "allow"}
+
+# ROOT OBJECT
 class DispatchToutbox(BaseModel):
     CriacaoPedido: Optional[str] = None
     DataPagamento: Optional[str] = None
@@ -188,7 +191,7 @@ class DispatchToutbox(BaseModel):
     Marca: Optional[Marca] = None
     Seller: Optional[Seller] = None
 
-    CanalDeVenda: Optional[str] = None
+    CanalDeVenda: Optional[CanalDeVenda] = None
     Warehouse: Optional[str] = None
     UnidadeDeNegocio: Optional[str] = None
     Rede: Optional[str] = None
