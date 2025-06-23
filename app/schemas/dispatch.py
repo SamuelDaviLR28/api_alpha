@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import List, Optional, Union
 from pydantic import BaseModel
-from typing import Literal 
+
 
 class Produto(BaseModel):
     Descricao: Optional[str] = None
@@ -42,6 +42,7 @@ class Transportadora(BaseModel):
     ValorDeclarado: Optional[float] = None
     ValorFrete: Optional[float] = None
     Prioridade: Optional[bool] = None
+    EntregaAgendada: Optional[bool] = None
 
     model_config = {"extra": "allow"}
 
@@ -96,6 +97,14 @@ class Item(BaseModel):
     model_config = {"extra": "allow"}
 
 
+class InfosAdicionais(BaseModel):
+    EntregaAgendada: Optional[bool] = None
+    Portabilidade: Optional[bool] = None
+    Chave: Optional[str] = None  # se for usada em NotaFiscal.InfosAdicionais
+
+    model_config = {"extra": "allow"}
+
+
 class NotaFiscal(BaseModel):
     Numero: Optional[Union[int, str]] = None
     Serie: Optional[Union[int, str]] = None
@@ -104,14 +113,7 @@ class NotaFiscal(BaseModel):
     DataEmissao: Optional[str] = None
     ValorTotal: Optional[float] = None
     ValorTotalProdutos: Optional[float] = None
-    InfosAdicionais: Optional[dict] = None
-
-    model_config = {"extra": "allow"}
-
-
-class InfosAdicionais(BaseModel):
-    EntregaAgendada: Optional[bool] = None
-    Portabilidade: Optional[bool] = None
+    InfosAdicionais: Optional[Union[InfosAdicionais, dict]] = None
 
     model_config = {"extra": "allow"}
 
@@ -164,8 +166,7 @@ class DispatchToutbox(BaseModel):
     Seller: Optional[Seller] = None
 
     Itens: Optional[List[Item]] = None
-    NotaFiscal: Literal[None] = None
-    InfosAdicionais: Literal[None] = None
+    NotaFiscal: Optional[NotaFiscal] = None
 
     model_config = {"extra": "allow"}
 
