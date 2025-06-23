@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import List, Optional, Union
 from pydantic import BaseModel
-
+from typing import Literal 
 
 class Produto(BaseModel):
     Descricao: Optional[str] = None
@@ -164,8 +164,8 @@ class DispatchToutbox(BaseModel):
     Seller: Optional[Seller] = None
 
     Itens: Optional[List[Item]] = None
-    NotaFiscal: Optional[NotaFiscal] = None
-    InfosAdicionais: Optional[InfosAdicionais] = None
+    NotaFiscal: Literal[None] = None
+    InfosAdicionais: Literal[None] = None
 
     model_config = {"extra": "allow"}
 
