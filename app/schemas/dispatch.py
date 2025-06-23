@@ -105,8 +105,7 @@ class NotaFiscal(BaseModel):
     DataEmissao: Optional[str] = None
     ValorTotal: Optional[float] = None
     ValorTotalProdutos: Optional[float] = None
-    InfosAdicionais: Optional[dict] = None
-
+ 
     model_config = {"extra": "ignore"}
 
 
