@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import List, Optional
-from pydantic import BaseModel, Field
-
+from pydantic import BaseModel
 
 
 class Produto(BaseModel):
@@ -18,7 +17,10 @@ class Produto(BaseModel):
     TipoProduto: Optional[str] = None
     Fabricante: Optional[str] = None
 
-    model_config = {"extra": "ignore"}
+    model_config = {
+        "extra": "ignore",
+        "strict": False
+    }
 
 
 class Transportadora(BaseModel):
@@ -44,7 +46,10 @@ class Transportadora(BaseModel):
     ValorFrete: Optional[float] = None
     Prioridade: Optional[bool] = None
 
-    model_config = {"extra": "ignore"}
+    model_config = {
+        "extra": "ignore",
+        "strict": False
+    }
 
 
 class Pessoa(BaseModel):
@@ -66,11 +71,17 @@ class Pessoa(BaseModel):
     NomeCentroDistribuicao: Optional[str] = None
     CodigoCentroDistribuicao: Optional[str] = None
 
-    model_config = {"extra": "ignore"}
+    model_config = {
+        "extra": "ignore",
+        "strict": False
+    }
 
 
 class Tomador(Pessoa):
-    pass
+    model_config = {
+        "extra": "ignore",
+        "strict": False
+    }
 
 
 class Frete(BaseModel):
@@ -79,7 +90,10 @@ class Frete(BaseModel):
     Remetente: Optional[Pessoa] = None
     Tomador: Optional[Tomador] = None
 
-    model_config = {"extra": "ignore"}
+    model_config = {
+        "extra": "ignore",
+        "strict": False
+    }
 
 
 class Item(BaseModel):
@@ -94,7 +108,10 @@ class Item(BaseModel):
     Produtos: Optional[List[Produto]] = None
     Frete: Optional[Frete] = None
 
-    model_config = {"extra": "ignore"}
+    model_config = {
+        "extra": "ignore",
+        "strict": False
+    }
 
 
 class NotaFiscal(BaseModel):
@@ -105,27 +122,41 @@ class NotaFiscal(BaseModel):
     DataEmissao: Optional[str] = None
     ValorTotal: Optional[float] = None
     ValorTotalProdutos: Optional[float] = None
- 
-    model_config = {"extra": "ignore"}
+
+    model_config = {
+        "extra": "ignore",
+        "strict": False
+    }
 
 
 class InfosAdicionais(BaseModel):
     EntregaAgendada: Optional[bool] = None
     Portabilidade: Optional[bool] = None
 
-    model_config = {"extra": "ignore"}
+    model_config = {
+        "extra": "ignore",
+        "strict": False
+    }
 
 
 class Marketplace(BaseModel):
     Id: Optional[str] = None
     Nome: Optional[str] = None
-    model_config = {"extra": "ignore"}
+
+    model_config = {
+        "extra": "ignore",
+        "strict": False
+    }
 
 
 class Marca(BaseModel):
     Id: Optional[str] = None
     Nome: Optional[str] = None
-    model_config = {"extra": "ignore"}
+
+    model_config = {
+        "extra": "ignore",
+        "strict": False
+    }
 
 
 class Seller(BaseModel):
@@ -144,7 +175,10 @@ class Seller(BaseModel):
     Pais: Optional[str] = None
     CEP: Optional[str] = None
 
-    model_config = {"extra": "ignore"}
+    model_config = {
+        "extra": "ignore",
+        "strict": False
+    }
 
 
 class DispatchToutbox(BaseModel):
@@ -162,11 +196,13 @@ class DispatchToutbox(BaseModel):
     Seller: Optional[Seller] = None
 
     Itens: Optional[List[Item]] = None
-    NotaFiscal: Optional[NotaFiscal] = None  # corrigido
-    InfosAdicionais: Optional[InfosAdicionais] = None  # corrigido
+    NotaFiscal: Optional[NotaFiscal] = None
+    InfosAdicionais: Optional[InfosAdicionais] = None
 
-    model_config = {"extra": "ignore"}
-
+    model_config = {
+        "extra": "ignore",
+        "strict": False
+    }
 
 
 DispatchToutbox.model_rebuild()
