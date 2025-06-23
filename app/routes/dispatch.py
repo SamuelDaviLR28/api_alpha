@@ -11,21 +11,22 @@ from app.schemas.dispatch import DispatchToutbox
 router = APIRouter(prefix="/hooks/vivo")
 API_KEY = os.getenv("API_KEY")
 
+
 async def get_db():
     async with SessionLocal() as session:
         yield session
 
+
 async def verify_api_key(x_api_key: str = Header(None)):
     if not x_api_key or x_api_key != API_KEY:
         raise HTTPException(status_code=401, detail="API Key inválida")
+
 
 @router.post("/dispatch", dependencies=[Depends(verify_api_key)], status_code=201)
 async def receive_dispatch(
     payload: DispatchToutbox,
     db: AsyncSession = Depends(get_db)
 ):
-    data = payload.model_dump()
-
     unique_id = payload.NumeroPedidoErp
     if unique_id:
         q = select(Dispatch).filter(Dispatch.unique_id == unique_id)
@@ -34,14 +35,13 @@ async def receive_dispatch(
             return {"message": "Dispatch já cadastrado", "unique_id": unique_id}
 
     order_id = payload.NumeroPedido
-    canal_de_venda = payload.CanalDeVenda  # se for dict
-    nota_fiscal = payload.NotaFiscal
+    canal_de_venda = payload.CanalDeVenda
     itens = payload.Itens or []
 
-    primeiro_item = itens[0] if itens else None
-    frete = primeiro_item.Frete if primeiro_item and primeiro_item.Frete else None
-    destinatario = frete.Destinatario if frete else None
-    remetente = frete.Remetente if frete else None
+    destinatario = None
+    remetente = None
+    nota_fiscal = None
+    infos_adicionais = None
 
     dispatch_data = {
         "order_id": order_id,
@@ -59,4 +59,3 @@ async def receive_dispatch(
     await db.refresh(novo)
 
     return {"message": "Pedido recebido com sucesso", "id": novo.id}
-
