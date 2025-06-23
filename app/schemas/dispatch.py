@@ -43,6 +43,13 @@ class Transportadora(BaseModel):
     ValorFrete: Optional[float] = None
     Prioridade: Optional[bool] = None
     EntregaAgendada: Optional[bool] = None
+    ResponsavelRecebimento: Optional[str] = None
+    SenhaVerificacao: Optional[str] = None
+    TipoOperacao: Optional[str] = None
+    TipoDevolucao: Optional[str] = None
+    MotivoDevolucao: Optional[str] = None
+    TipoPrioridade: Optional[str] = None
+    ServicosAdicionais: Optional[str] = None
 
     model_config = {"extra": "allow"}
 
@@ -51,6 +58,8 @@ class Pessoa(BaseModel):
     Nome: Optional[str] = None
     CPFCNPJ: Optional[str] = None
     Telefone: Optional[str] = None
+    TelefoneFixo: Optional[str] = None
+    TelefoneAdicional: Optional[str] = None
     Email: Optional[str] = None
     Empresa: Optional[str] = None
     Endereco: Optional[str] = None
@@ -65,6 +74,9 @@ class Pessoa(BaseModel):
     Loja: Optional[Union[bool, str]] = None
     NomeCentroDistribuicao: Optional[str] = None
     CodigoCentroDistribuicao: Optional[str] = None
+    Lat: Optional[str] = None
+    Long: Optional[str] = None
+    Referencia: Optional[str] = None
 
     model_config = {"extra": "allow"}
 
@@ -98,9 +110,19 @@ class Item(BaseModel):
 
 
 class InfosAdicionais(BaseModel):
+    CartaoPostagem: Optional[str] = None
+    CodigoAdmnistrativo: Optional[str] = None
+    ContratoCorreios: Optional[str] = None
     EntregaAgendada: Optional[bool] = None
+    DataAgendamento: Optional[str] = None
+    PeriodoEntregaAgendamento: Optional[str] = None
+    Cluster: Optional[str] = None
+    TecnologiaDeAcesso: Optional[str] = None
+    Acronimo: Optional[str] = None
+    IdCliente: Optional[str] = None
+    IdDestinatario: Optional[str] = None
     Portabilidade: Optional[bool] = None
-    Chave: Optional[str] = None  # se for usada em NotaFiscal.InfosAdicionais
+    SegmentoCliente: Optional[str] = None
 
     model_config = {"extra": "allow"}
 
@@ -113,6 +135,7 @@ class NotaFiscal(BaseModel):
     DataEmissao: Optional[str] = None
     ValorTotal: Optional[float] = None
     ValorTotalProdutos: Optional[float] = None
+    StringXML: Optional[str] = None
     InfosAdicionais: Optional[Union[InfosAdicionais, dict]] = None
 
     model_config = {"extra": "allow"}
@@ -165,10 +188,14 @@ class DispatchToutbox(BaseModel):
     Marca: Optional[Marca] = None
     Seller: Optional[Seller] = None
 
+    CanalDeVenda: Optional[str] = None
+    Warehouse: Optional[str] = None
+    UnidadeDeNegocio: Optional[str] = None
+    Rede: Optional[str] = None
+    Campanha: Optional[str] = None
+
     Itens: Optional[List[Item]] = None
     NotaFiscal: Optional[NotaFiscal] = None
+    InfosAdicionais: Optional[InfosAdicionais] = None
 
     model_config = {"extra": "allow"}
-
-
-DispatchToutbox.model_rebuild()
