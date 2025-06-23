@@ -1,50 +1,37 @@
-from sqlalchemy import Column, Integer, String, JSON, DateTime
-from sqlalchemy.sql import func
-from app.database import Base
+from fastapi import FastAPI, Header, HTTPException, Depends
+from dotenv import load_dotenv
+import os
+
+from app.routes import dispatch, patch, rastro, motorista, rota, cancelamento
+from app.database import engine, Base
+
+load_dotenv()
+
+app = FastAPI()
+
+API_KEY = os.getenv("API_KEY")
 
 
-class Dispatch(Base):
-    __tablename__ = "dispatches"
-    id = Column(Integer, primary_key=True, index=True)
-    order_id = Column(String(100), index=True)
-    unique_id = Column(String(100), unique=True)
-    client_info = Column(JSON)
-    recipient_info = Column(JSON)
-    invoice_info = Column(JSON)
-    origin_info = Column(JSON)
-    volumes = Column(JSON)
+async def verify_api_key(x_api_key: str = Header(...)):
+    if x_api_key != API_KEY:
+        raise HTTPException(status_code=401, detail="Unauthorized")
 
 
-class Cancelamento(Base):
-    __tablename__ = "cancelamentos"
-    id = Column(Integer, primary_key=True, index=True)
-    dados = Column(JSON)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+@app.get("/")
+async def root():
+    return {"message": "API rodando online com sucesso!"}
 
 
-class PatchFretePrazo(Base):
-    __tablename__ = "patches"
-    id = Column(Integer, primary_key=True, index=True)
-    dados = Column(JSON)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+app.include_router(dispatch.router, dependencies=[Depends(verify_api_key)])
+app.include_router(patch.router, dependencies=[Depends(verify_api_key)])
+app.include_router(rastro.router, dependencies=[Depends(verify_api_key)])
+app.include_router(motorista.router, dependencies=[Depends(verify_api_key)])
+app.include_router(rota.router, dependencies=[Depends(verify_api_key)])
+app.include_router(cancelamento.router, dependencies=[Depends(verify_api_key)])
 
 
-class Rastro(Base):
-    __tablename__ = "rastros"
-    id = Column(Integer, primary_key=True, index=True)
-    dados = Column(JSON)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+@app.on_event("startup")
+async def startup_event():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
 
-
-class Motorista(Base):
-    __tablename__ = "motoristas"
-    id = Column(Integer, primary_key=True, index=True)
-    dados = Column(JSON)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-
-
-class Rota(Base):
-    __tablename__ = "rotas"
-    id = Column(Integer, primary_key=True, index=True)
-    dados = Column(JSON)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
