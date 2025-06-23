@@ -1,161 +1,173 @@
+from __future__ import annotations
 from typing import List, Optional, Union
 from pydantic import BaseModel
 
 
 class Produto(BaseModel):
-    Descricao: Optional[str]
-    Altura: Optional[float]
-    Comprimento: Optional[float]
-    Largura: Optional[float]
-    Peso: Optional[float]
-    Preco: Optional[float]
-    Quantidade: Optional[int]
-    SKU: Optional[str]
-    CodigoProduto: Optional[str]
-    NumeroDeSerie: Optional[str]
-    TipoProduto: Optional[str]
-    Fabricante: Optional[str]
+    Descricao: Optional[str] = None
+    Altura: Optional[float] = None
+    Comprimento: Optional[float] = None
+    Largura: Optional[float] = None
+    Peso: Optional[float] = None
+    Preco: Optional[float] = None
+    Quantidade: Optional[int] = None
+    SKU: Optional[str] = None
+    CodigoProduto: Optional[str] = None
+    NumeroDeSerie: Optional[str] = None
+    TipoProduto: Optional[str] = None
+    Fabricante: Optional[str] = None
 
-
-class Pessoa(BaseModel):
-    Nome: Optional[str]
-    CPFCNPJ: Optional[str]
-    IE: Optional[str]
-    Telefone: Optional[str]
-    TelefoneFixo: Optional[str]
-    TelefoneAdicional: Optional[str]
-    Email: Optional[Union[str, None]]
-    Empresa: Optional[str]
-    Endereco: Optional[str]
-    Numero: Optional[str]
-    Complemento: Optional[str]
-    Bairro: Optional[str]
-    Cidade: Optional[str]
-    Estado: Optional[str]
-    Pais: Optional[str]
-    CEP: Optional[str]
-    Loja: Optional[Union[bool, str]]
-    NomeCentroDistribuicao: Optional[str]
-    CodigoCentroDistribuicao: Optional[str]
+    model_config = {"extra": "allow"}
 
 
 class Transportadora(BaseModel):
-    Id: Optional[str]
-    id: Optional[str]  
-    Nome: Optional[str]
-    NomeServico: Optional[str]
-    IdServico: Optional[str]
-    CodigoRastreio: Optional[str]
-    ListaPostagem: Optional[str]
-    CNPJ: Optional[str]
-    Reversa: Optional[bool]
-    Coleta: Optional[bool]
-    Dispatch: Optional[bool]
-    AlocacaoAutomatica: Optional[bool]
-    CodigoAutorizacao: Optional[str]
-    PrazoDiasUteis: Optional[int]
-    PrazoEntregaFinal: Optional[str]
-    DataPrometida: Optional[str]
-    PrevisaoDeEntrega: Optional[str]
-    ValorAR: Optional[float]
-    ValorAverbadoPago: Optional[float]
-    ValorDeclarado: Optional[float]
-    ValorFrete: Optional[float]
-    EntregaAgendada: Optional[bool]
-    Prioridade: Optional[bool]
+    Id: Optional[str] = None
+    Nome: Optional[str] = None
+    NomeServico: Optional[str] = None
+    IdServico: Optional[str] = None
+    CodigoRastreio: Optional[str] = None
+    ListaPostagem: Optional[str] = None
+    CNPJ: Optional[str] = None
+    Reversa: Optional[bool] = None
+    Coleta: Optional[bool] = None
+    Dispatch: Optional[bool] = None
+    AlocacaoAutomatica: Optional[bool] = None
+    CodigoAutorizacao: Optional[str] = None
+    PrazoDiasUteis: Optional[int] = None
+    PrazoEntregaFinal: Optional[str] = None
+    DataPrometida: Optional[str] = None
+    PrevisaoDeEntrega: Optional[str] = None
+    ValorAR: Optional[float] = None
+    ValorAverbadoPago: Optional[float] = None
+    ValorDeclarado: Optional[float] = None
+    ValorFrete: Optional[float] = None
+    Prioridade: Optional[bool] = None
+
+    model_config = {"extra": "allow"}
+
+
+class Pessoa(BaseModel):
+    Nome: Optional[str] = None
+    CPFCNPJ: Optional[str] = None
+    Telefone: Optional[str] = None
+    Email: Optional[str] = None
+    Empresa: Optional[str] = None
+    Endereco: Optional[str] = None
+    Numero: Optional[str] = None
+    Complemento: Optional[str] = None
+    Bairro: Optional[str] = None
+    Cidade: Optional[str] = None
+    Estado: Optional[str] = None
+    Pais: Optional[str] = None
+    CEP: Optional[str] = None
+    IE: Optional[str] = None
+    Loja: Optional[Union[bool, str]] = None
+    NomeCentroDistribuicao: Optional[str] = None
+    CodigoCentroDistribuicao: Optional[str] = None
+
+    model_config = {"extra": "allow"}
+
+
+class Tomador(Pessoa):
+    pass
 
 
 class Frete(BaseModel):
-    Transportadora: Optional[Transportadora]
-    Destinatario: Optional[Pessoa]
-    Remetente: Optional[Pessoa]
-    Tomador: Optional[Pessoa]
+    Transportadora: Optional[Transportadora] = None
+    Destinatario: Optional[Pessoa] = None
+    Remetente: Optional[Pessoa] = None
+    Tomador: Optional[Tomador] = None
 
-
-class InfosAdicionaisNota(BaseModel):
-    Chave: Optional[str]
-
-
-class NotaFiscal(BaseModel):
-    Numero: Optional[Union[str, int]]
-    Serie: Optional[Union[str, int]]
-    Cfop: Optional[str]
-    Chave: Optional[str]
-    DataEmissao: Optional[str]
-    ValorTotal: Optional[float]
-    ValorTotalProdutos: Optional[float]
-    InfosAdicionais: Optional[InfosAdicionaisNota]
-
-
-class ProdutoItem(BaseModel):
-    Descricao: Optional[str]
-    Altura: Optional[float]
-    Comprimento: Optional[float]
-    Largura: Optional[float]
-    Peso: Optional[float]
-    Preco: Optional[float]
-    Quantidade: Optional[int]
-    SKU: Optional[str]
+    model_config = {"extra": "allow"}
 
 
 class Item(BaseModel):
-    IdUnico: Optional[str]
-    QuantidadeProdutos: Optional[int]
-    Volumes: Optional[Union[int, str]]
-    Largura: Optional[float]
-    Peso: Optional[float]
-    Altura: Optional[float]
-    Comprimento: Optional[float]
-    Formato: Optional[str]
-    Produtos: Optional[List[ProdutoItem]]
-    Frete: Optional[Frete]
+    IdUnico: Optional[str] = None
+    QuantidadeProdutos: Optional[int] = None
+    Volumes: Optional[Union[int, str]] = None
+    Largura: Optional[float] = None
+    Peso: Optional[float] = None
+    Altura: Optional[float] = None
+    Comprimento: Optional[float] = None
+    Formato: Optional[str] = None
+    Produtos: Optional[List[Produto]] = None
+    Frete: Optional[Frete] = None
+
+    model_config = {"extra": "allow"}
+
+
+class NotaFiscal(BaseModel):
+    Numero: Optional[Union[int, str]] = None
+    Serie: Optional[Union[int, str]] = None
+    Cfop: Optional[str] = None
+    Chave: Optional[str] = None
+    DataEmissao: Optional[str] = None
+    ValorTotal: Optional[float] = None
+    ValorTotalProdutos: Optional[float] = None
+    InfosAdicionais: Optional[dict] = None
+
+    model_config = {"extra": "allow"}
+
+
+class InfosAdicionais(BaseModel):
+    EntregaAgendada: Optional[bool] = None
+    Portabilidade: Optional[bool] = None
+
+    model_config = {"extra": "allow"}
 
 
 class Marketplace(BaseModel):
-    Id: Optional[str]
-    Nome: Optional[str]
+    Id: Optional[str] = None
+    Nome: Optional[str] = None
+
+    model_config = {"extra": "allow"}
 
 
 class Marca(BaseModel):
-    Id: Optional[str]
-    Nome: Optional[str]
+    Id: Optional[str] = None
+    Nome: Optional[str] = None
+
+    model_config = {"extra": "allow"}
 
 
 class Seller(BaseModel):
-    Id: Optional[str]
-    RazaoSocial: Optional[str]
-    NomeFantasia: Optional[str]
-    CNPJ: Optional[str]
-    Contato: Optional[str]
-    Email: Optional[str]
-    Endereco: Optional[str]
-    Numero: Optional[str]
-    Complemento: Optional[str]
-    Bairro: Optional[str]
-    Cidade: Optional[str]
-    Estado: Optional[str]
-    Pais: Optional[str]
-    CEP: Optional[str]
+    Id: Optional[str] = None
+    RazaoSocial: Optional[str] = None
+    NomeFantasia: Optional[str] = None
+    CNPJ: Optional[str] = None
+    Contato: Optional[str] = None
+    Email: Optional[str] = None
+    Endereco: Optional[str] = None
+    Numero: Optional[str] = None
+    Complemento: Optional[str] = None
+    Bairro: Optional[str] = None
+    Cidade: Optional[str] = None
+    Estado: Optional[str] = None
+    Pais: Optional[str] = None
+    CEP: Optional[str] = None
+
+    model_config = {"extra": "allow"}
 
 
 class DispatchToutbox(BaseModel):
-    CriacaoPedido: Optional[str]
-    DataPagamento: Optional[str]
-    NumeroPedido: Optional[str]
-    NumeroPedidomarketplace: Optional[str]
-    NumeroPedidoMarketplace: Optional[str]
-    NumeroPedidoErp: Optional[str]
-    NumeroPedidoAux: Optional[str]
-    IdsAuxiliares: Optional[str]
-    CanalDeVenda: Optional[dict]
+    CriacaoPedido: Optional[str] = None
+    DataPagamento: Optional[str] = None
+    NumeroPedido: Optional[str] = None
+    NumeroPedidomarketplace: Optional[str] = None
+    NumeroPedidoMarketplace: Optional[str] = None
+    NumeroPedidoErp: Optional[str] = None
+    NumeroPedidoAux: Optional[str] = None
+    IdsAuxiliares: Optional[str] = None
 
-    Marketplace: Optional[Marketplace]
-    Marca: Optional[Marca]
-    Seller: Optional[Seller]
+    Marketplace: Optional[Marketplace] = None
+    Marca: Optional[Marca] = None
+    Seller: Optional[Seller] = None
 
-    Itens: Optional[List[Item]]
-    NotaFiscal: Optional[NotaFiscal]
-    InfosAdicionais: Optional[dict]
+    Itens: Optional[List[Item]] = None
+    NotaFiscal: Optional[NotaFiscal] = None
+    InfosAdicionais: Optional[InfosAdicionais] = None
 
-    class Config:
-        extra = "allow"  
+    model_config = {"extra": "allow"}
+
+
+DispatchToutbox.model_rebuild()
