@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import List, Optional, Union
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 def to_snake_case(alias: str) -> str:
     return alias[0].lower() + ''.join(['_' + c.lower() if c.isupper() else c for c in alias[1:]])
@@ -107,7 +107,7 @@ class Item(MeuBaseModel):
     Produtos: Optional[List[Produto]] = None
     Frete: Optional[Frete] = None
 
-# INFOS ADICIONAIS com print
+# INFOS ADICIONAIS
 class InfosAdicionais(MeuBaseModel):
     def __init__(__pydantic_self__, **data):
         print("📋 [DEBUG] InfosAdicionais instanciada de:", __pydantic_self__.__module__)
@@ -127,7 +127,7 @@ class InfosAdicionais(MeuBaseModel):
     Portabilidade: Optional[bool] = None
     SegmentoCliente: Optional[str] = None
 
-# NOTA FISCAL com print
+# NOTA FISCAL
 class NotaFiscal(MeuBaseModel):
     def __init__(__pydantic_self__, **data):
         print("🧾 [DEBUG] NotaFiscal instanciada de:", __pydantic_self__.__module__)
@@ -192,7 +192,7 @@ class DispatchToutbox(MeuBaseModel):
     Rede: Optional[str] = None
     Campanha: Optional[str] = None
 
-    Itens_: Optional[List[Item]] = None
+    Itens: Optional[List[Item]] = Field(default=None, alias="Itens")
     NotaFiscal: Optional[NotaFiscal] = None
     InfosAdicionais: Optional[InfosAdicionais] = None
 
@@ -200,3 +200,9 @@ class DispatchToutbox(MeuBaseModel):
 
     def __init__(__pydantic_self__, **data):
         print("🧠 [DEBUG] Instanciando DispatchToutbox de:", __pydantic_self__.__module__)
+        super().__init__(**data)
+
+class RotaPayload(DispatchToutbox):
+    pass
+
+# Rebuilds
