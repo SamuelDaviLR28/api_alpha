@@ -11,16 +11,13 @@ from app.schemas.dispatch import DispatchToutbox
 router = APIRouter(prefix="/hooks/vivo")
 API_KEY = os.getenv("API_KEY")
 
-
 async def get_db():
     async with SessionLocal() as session:
         yield session
 
-
 async def verify_api_key(x_api_key: str = Header(None)):
     if not x_api_key or x_api_key != API_KEY:
         raise HTTPException(status_code=401, detail="API Key inválida")
-
 
 @router.post("/dispatch", dependencies=[Depends(verify_api_key)], status_code=201)
 async def receive_dispatch(
@@ -28,14 +25,13 @@ async def receive_dispatch(
     db: AsyncSession = Depends(get_db),
     request: Request = None
 ):
-    # 🔎 Diagnóstico de schema e tipos reais recebidos
     print("🔍 DispatchToutbox carregado de:", DispatchToutbox.__module__)
     print("📋 Campos e tipos do schema:")
     for campo, tipo in DispatchToutbox.__annotations__.items():
         print(f" - {campo}: {tipo}")
 
     try:
-        item = payload.Itens[0] if payload.Itens else None
+        item = payload.Itens_[0] if payload.Itens_ else None
         frete = item.Frete if item else None
 
         print("📦 Frete →", type(frete))
@@ -47,7 +43,6 @@ async def receive_dispatch(
     except Exception as e:
         print("🚨 Erro durante diagnóstico dos campos:", e)
 
-    # 🚧 Verificação de duplicidade
     unique_id = payload.NumeroPedidoErp
     if unique_id:
         q = select(Dispatch).filter(Dispatch.unique_id == unique_id)
@@ -55,10 +50,9 @@ async def receive_dispatch(
         if res.scalars().first():
             return {"message": "Dispatch já cadastrado", "unique_id": unique_id}
 
-    # 📦 Construção da instância
     order_id = payload.NumeroPedido
     canal_de_venda = payload.CanalDeVenda
-    itens = payload.Itens or []
+    itens = payload.Itens_ or []
 
     destinatario = None
     remetente = None
