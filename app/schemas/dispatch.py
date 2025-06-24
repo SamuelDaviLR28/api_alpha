@@ -2,17 +2,18 @@ from __future__ import annotations
 from typing import List, Optional, Union
 from pydantic import BaseModel, ConfigDict
 
-#  Função para converter camelCase ou PascalCase para snake_case
+
 def to_snake_case(alias: str) -> str:
     return alias[0].lower() + ''.join(['_' + c.lower() if c.isupper() else c for c in alias[1:]])
 
-#  Modelo base com alias_generator aplicado
+
 class MeuBaseModel(BaseModel):
     model_config = ConfigDict(
         extra="allow",
         alias_generator=to_snake_case,
         populate_by_name=True
     )
+
 
 # PRODUTO
 class Produto(MeuBaseModel):
@@ -28,6 +29,7 @@ class Produto(MeuBaseModel):
     NumeroDeSerie: Optional[str] = None
     TipoProduto: Optional[str] = None
     Fabricante: Optional[str] = None
+
 
 # TRANSPORTADORA
 class Transportadora(MeuBaseModel):
@@ -61,6 +63,7 @@ class Transportadora(MeuBaseModel):
     TipoPrioridade: Optional[str] = None
     ServicosAdicionais: Optional[str] = None
 
+
 # PESSOA
 class Pessoa(MeuBaseModel):
     Nome: Optional[str] = None
@@ -86,8 +89,10 @@ class Pessoa(MeuBaseModel):
     Long: Optional[str] = None
     Referencia: Optional[str] = None
 
+
 class Tomador(Pessoa):
     pass
+
 
 # FRETE
 class Frete(MeuBaseModel):
@@ -95,6 +100,7 @@ class Frete(MeuBaseModel):
     Destinatario: Optional[Pessoa] = None
     Remetente: Optional[Pessoa] = None
     Tomador: Optional[Tomador] = None
+
 
 # ITEM
 class Item(MeuBaseModel):
@@ -108,6 +114,7 @@ class Item(MeuBaseModel):
     Formato: Optional[str] = None
     Produtos: Optional[List[Produto]] = None
     Frete: Optional[Frete] = None
+
 
 # INFOS ADICIONAIS
 class InfosAdicionais(MeuBaseModel):
@@ -125,6 +132,7 @@ class InfosAdicionais(MeuBaseModel):
     Portabilidade: Optional[bool] = None
     SegmentoCliente: Optional[str] = None
 
+
 # NOTA FISCAL
 class NotaFiscal(MeuBaseModel):
     Numero: Optional[Union[int, str]] = None
@@ -137,14 +145,17 @@ class NotaFiscal(MeuBaseModel):
     StringXML: Optional[str] = None
     InfosAdicionais: Optional[Union[InfosAdicionais, dict]] = None
 
-# OUTROS OBJETOS
+
+# OBJETOS EXTERNOS
 class Marketplace(MeuBaseModel):
     Id: Optional[str] = None
     Nome: Optional[str] = None
 
+
 class Marca(MeuBaseModel):
     Id: Optional[str] = None
     Nome: Optional[str] = None
+
 
 class Seller(MeuBaseModel):
     Id: Optional[str] = None
@@ -162,9 +173,11 @@ class Seller(MeuBaseModel):
     Pais: Optional[str] = None
     CEP: Optional[str] = None
 
+
 class CanalDeVenda(MeuBaseModel):
     Id: Optional[str] = None
     Nome: Optional[str] = None
+
 
 # ✅ ROOT SCHEMA
 class DispatchToutbox(MeuBaseModel):
@@ -192,6 +205,11 @@ class DispatchToutbox(MeuBaseModel):
 
     VersaoSchema: Optional[str] = "v2.11.3"
 
+    def __init__(__pydantic_self__, **data):
+        print(" [DEBUG] Instanciando DispatchToutbox de:", __pydantic_self__.__module__)
+        super().__init__(**data)
 
+
+# Derivado
 class RotaPayload(DispatchToutbox):
     pass
