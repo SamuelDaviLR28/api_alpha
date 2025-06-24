@@ -213,3 +213,8 @@ class DispatchToutbox(MeuBaseModel):
 # Derivado
 class RotaPayload(DispatchToutbox):
     pass
+# Força rebuild das anotações após todas as definições
+Frete.model_rebuild()
+NotaFiscal.model_rebuild()
+InfosAdicionais.model_rebuild()
+DispatchToutbox.model_rebuild()
