@@ -172,24 +172,20 @@ class DispatchToutbox(MeuBaseModel):
         if "Itens" in values and isinstance(values["Itens"], list):
             coerced = []
             for i in values["Itens"]:
-        if isinstance(i, dict) and "Frete" in i and isinstance(i["Frete"], dict):
+                if isinstance(i, dict) and "Frete" in i and isinstance(i["Frete"], dict):
                     i["Frete"] = Frete(**i["Frete"])
                 coerced.append(Item(**i) if isinstance(i, dict) else i)
             values["Itens"] = coerced
 
         if "Transportadora" in values and isinstance(values["Transportadora"], dict):
             transportadora = Transportadora(**values["Transportadora"])
-        if values.get("Itens") and isinstance(values["Itens"][0], dict):
+            if values.get("Itens") and isinstance(values["Itens"][0], dict):
                 values["Itens"][0].setdefault("Frete", {})["Transportadora"] = transportadora
             del values["Transportadora"]
 
         if "Tomador" in values and isinstance(values["Tomador"], dict):
             tomador = Tomador(**values["Tomador"])
-        if values.get("Itens") and isinstance(values["Itens"][0], dict):
-                values["Itens"][0].setdefault("Frete", {})["Tomador"] = tomador
-            del values["Tomador"]
-
-        return values
+            if values.get("Itens")
 
 class RotaPayload(DispatchToutbox):
     pass
