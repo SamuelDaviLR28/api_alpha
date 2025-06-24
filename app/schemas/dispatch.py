@@ -163,6 +163,11 @@ class DispatchToutbox(MeuBaseModel):
                     i["Frete"] = Frete(**i["Frete"])
                 coerced.append(Item(**i) if isinstance(i, dict) else i)
             values["Itens"] = coerced
+
+        # Limpa campos soltos fora da estrutura esperada
+        values.pop("Transportadora", None)
+        values.pop("Tomador", None)
+
         return values
 
 class RotaPayload(DispatchToutbox):
