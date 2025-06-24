@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import List, Optional, Union
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, root_validator
 
 def to_snake_case(alias: str) -> str:
     return alias[0].lower() + ''.join(['_' + c.lower() if c.isupper() else c for c in alias[1:]])
@@ -161,6 +161,24 @@ class DispatchToutbox(MeuBaseModel):
     def __init__(__pydantic_self__, **data):
         print("🧠 [DEBUG] Instanciando DispatchToutbox de:", __pydantic_self__.__module__)
         super().__init__(**data)
+
+    @root_validator(pre=True)
+    def parse_nested_models(cls, values):
+        if "NotaFiscal" in values and isinstance(values["NotaFiscal"], dict):
+            values["NotaFiscal"] = NotaFiscal(**values["NotaFiscal"])
+        if "InfosAdicionais" in values and isinstance(values["InfosAdicionais"], dict):
+            values["InfosAdicionais"] = InfosAdicionais(**values["InfosAdicionais"])
+        if "Itens" in values and isinstance(values["Itens"], list):
+            coerced = []
+            for i in values["Itens"]:
+                if isinstance(i, dict):
+                    if "Frete" in i and isinstance(i["Frete"], dict):
+                        i["Frete"] = Frete(**i["Frete"])
+                    coerced.append(Item(**i))
+                else:
+                    coerced.append(i)
+            values["Itens"] = coerced
+        return values
 
 class RotaPayload(DispatchToutbox):
     pass
