@@ -1,13 +1,12 @@
-from __future__ import annotations
+from pydantic import BaseModel, Field, root_validator, ConfigDict
 from typing import List, Optional, Union
-from pydantic import BaseModel, ConfigDict, Field, root_validator
 
 def to_snake_case(alias: str) -> str:
     return alias[0].lower() + ''.join(['_' + c.lower() if c.isupper() else c for c in alias[1:]])
 
 class MeuBaseModel(BaseModel):
     model_config = ConfigDict(
-        extra="allow",
+        extra="ignore",  # ← ignora campos inesperados como Transportadora/Tomador soltos
         alias_generator=to_snake_case,
         populate_by_name=True
     )
@@ -152,13 +151,8 @@ class DispatchToutbox(MeuBaseModel):
 
     @root_validator(pre=True)
     def remove_extraneous_fields(cls, values):
-        if "Transportadora" in values and isinstance(values["Transportadora"], dict):
-            print("🚫 Ignorando 'Transportadora' fora de Frete")
-            values.pop("Transportadora")
-
-        if "Tomador" in values and isinstance(values["Tomador"], dict):
-            print("🚫 Ignorando 'Tomador' fora de Frete")
-            values.pop("Tomador")
+        values.pop("Transportadora", None)
+        values.pop("Tomador", None)
 
         if "NotaFiscal" in values and isinstance(values["NotaFiscal"], dict):
             values["NotaFiscal"] = NotaFiscal(**values["NotaFiscal"])
@@ -175,6 +169,3 @@ class DispatchToutbox(MeuBaseModel):
             values["Itens"] = coerced
 
         return values
-
-class RotaPayload(DispatchToutbox):
-    pass
