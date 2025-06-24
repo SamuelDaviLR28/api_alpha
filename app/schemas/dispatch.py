@@ -199,5 +199,8 @@ class DispatchToutbox(MeuBaseModel):
     VersaoSchema: Optional[str] = "v2.11.3"
 
     def __init__(__pydantic_self__, **data):
-    print("🧠 [DEBUG] Instanciando DispatchToutbox de:", __pydantic_self__.__module__)
-    super().__init__(**data)
+        print("🧠 [DEBUG] Instanciando DispatchToutbox de:", __pydantic_self__.__module__)
+        super().__init__(**data)
+
+class RotaPayload(DispatchToutbox):
+    pass
