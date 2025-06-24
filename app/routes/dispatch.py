@@ -27,6 +27,10 @@ async def receive_dispatch(
     payload: DispatchToutbox,
     db: AsyncSession = Depends(get_db)
 ):
+    #  Diagnóstico: de onde está vindo o schema? E como estão seus campos?
+    print("🔎 DispatchToutbox carregado de:", DispatchToutbox.__module__)
+    print("📋 Tipos dos campos:", DispatchToutbox.__annotations__)
+
     unique_id = payload.NumeroPedidoErp
     if unique_id:
         q = select(Dispatch).filter(Dispatch.unique_id == unique_id)
