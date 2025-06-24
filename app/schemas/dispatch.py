@@ -1,9 +1,21 @@
 from __future__ import annotations
 from typing import List, Optional, Union
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
+
+#  Função para converter camelCase ou PascalCase para snake_case
+def to_snake_case(alias: str) -> str:
+    return alias[0].lower() + ''.join(['_' + c.lower() if c.isupper() else c for c in alias[1:]])
+
+#  Modelo base com alias_generator aplicado
+class MeuBaseModel(BaseModel):
+    model_config = ConfigDict(
+        extra="allow",
+        alias_generator=to_snake_case,
+        populate_by_name=True
+    )
 
 # PRODUTO
-class Produto(BaseModel):
+class Produto(MeuBaseModel):
     Descricao: Optional[str] = None
     Altura: Optional[float] = None
     Comprimento: Optional[float] = None
@@ -16,10 +28,9 @@ class Produto(BaseModel):
     NumeroDeSerie: Optional[str] = None
     TipoProduto: Optional[str] = None
     Fabricante: Optional[str] = None
-    model_config = {"extra": "allow"}
 
 # TRANSPORTADORA
-class Transportadora(BaseModel):
+class Transportadora(MeuBaseModel):
     Id: Optional[str] = None
     Nome: Optional[str] = None
     NomeServico: Optional[str] = None
@@ -49,10 +60,9 @@ class Transportadora(BaseModel):
     MotivoDevolucao: Optional[str] = None
     TipoPrioridade: Optional[str] = None
     ServicosAdicionais: Optional[str] = None
-    model_config = {"extra": "allow"}
 
 # PESSOA
-class Pessoa(BaseModel):
+class Pessoa(MeuBaseModel):
     Nome: Optional[str] = None
     CPFCNPJ: Optional[str] = None
     Telefone: Optional[str] = None
@@ -75,21 +85,19 @@ class Pessoa(BaseModel):
     Lat: Optional[str] = None
     Long: Optional[str] = None
     Referencia: Optional[str] = None
-    model_config = {"extra": "allow"}
 
 class Tomador(Pessoa):
     pass
 
 # FRETE
-class Frete(BaseModel):
+class Frete(MeuBaseModel):
     Transportadora: Optional[Transportadora] = None
     Destinatario: Optional[Pessoa] = None
     Remetente: Optional[Pessoa] = None
     Tomador: Optional[Tomador] = None
-    model_config = {"extra": "allow"}
 
 # ITEM
-class Item(BaseModel):
+class Item(MeuBaseModel):
     IdUnico: Optional[str] = None
     QuantidadeProdutos: Optional[int] = None
     Volumes: Optional[Union[int, str]] = None
@@ -100,10 +108,9 @@ class Item(BaseModel):
     Formato: Optional[str] = None
     Produtos: Optional[List[Produto]] = None
     Frete: Optional[Frete] = None
-    model_config = {"extra": "allow"}
 
 # INFOS ADICIONAIS
-class InfosAdicionais(BaseModel):
+class InfosAdicionais(MeuBaseModel):
     CartaoPostagem: Optional[str] = None
     CodigoAdmnistrativo: Optional[str] = None
     ContratoCorreios: Optional[str] = None
@@ -117,10 +124,9 @@ class InfosAdicionais(BaseModel):
     IdDestinatario: Optional[str] = None
     Portabilidade: Optional[bool] = None
     SegmentoCliente: Optional[str] = None
-    model_config = {"extra": "allow"}
 
 # NOTA FISCAL
-class NotaFiscal(BaseModel):
+class NotaFiscal(MeuBaseModel):
     Numero: Optional[Union[int, str]] = None
     Serie: Optional[Union[int, str]] = None
     Cfop: Optional[str] = None
@@ -130,20 +136,17 @@ class NotaFiscal(BaseModel):
     ValorTotalProdutos: Optional[float] = None
     StringXML: Optional[str] = None
     InfosAdicionais: Optional[Union[InfosAdicionais, dict]] = None
-    model_config = {"extra": "allow"}
 
 # OUTROS OBJETOS
-class Marketplace(BaseModel):
+class Marketplace(MeuBaseModel):
     Id: Optional[str] = None
     Nome: Optional[str] = None
-    model_config = {"extra": "allow"}
 
-class Marca(BaseModel):
+class Marca(MeuBaseModel):
     Id: Optional[str] = None
     Nome: Optional[str] = None
-    model_config = {"extra": "allow"}
 
-class Seller(BaseModel):
+class Seller(MeuBaseModel):
     Id: Optional[str] = None
     RazaoSocial: Optional[str] = None
     NomeFantasia: Optional[str] = None
@@ -158,15 +161,13 @@ class Seller(BaseModel):
     Estado: Optional[str] = None
     Pais: Optional[str] = None
     CEP: Optional[str] = None
-    model_config = {"extra": "allow"}
 
-class CanalDeVenda(BaseModel):
+class CanalDeVenda(MeuBaseModel):
     Id: Optional[str] = None
     Nome: Optional[str] = None
-    model_config = {"extra": "allow"}
 
-# ✅ SCHEMA PRINCIPAL
-class DispatchToutbox(BaseModel):
+# ✅ ROOT SCHEMA
+class DispatchToutbox(MeuBaseModel):
     CriacaoPedido: Optional[str] = None
     DataPagamento: Optional[str] = None
     NumeroPedido: Optional[str] = None
@@ -189,10 +190,8 @@ class DispatchToutbox(BaseModel):
     NotaFiscal: Optional[NotaFiscal] = None
     InfosAdicionais: Optional[InfosAdicionais] = None
 
-    VersaoSchema: Optional[str] = "v2.11.3"  # ⬅️ Campo sentinela aqui
+    VersaoSchema: Optional[str] = "v2.11.3"
 
-    model_config = {"extra": "allow"}
 
-# (Se usar herança em outro schema)
 class RotaPayload(DispatchToutbox):
     pass
