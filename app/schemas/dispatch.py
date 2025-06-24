@@ -16,7 +16,6 @@ class Produto(BaseModel):
     NumeroDeSerie: Optional[str] = None
     TipoProduto: Optional[str] = None
     Fabricante: Optional[str] = None
-
     model_config = {"extra": "allow"}
 
 # TRANSPORTADORA
@@ -50,10 +49,9 @@ class Transportadora(BaseModel):
     MotivoDevolucao: Optional[str] = None
     TipoPrioridade: Optional[str] = None
     ServicosAdicionais: Optional[str] = None
-
     model_config = {"extra": "allow"}
 
-# PESSOA GENÉRICA
+# PESSOA
 class Pessoa(BaseModel):
     Nome: Optional[str] = None
     CPFCNPJ: Optional[str] = None
@@ -77,7 +75,6 @@ class Pessoa(BaseModel):
     Lat: Optional[str] = None
     Long: Optional[str] = None
     Referencia: Optional[str] = None
-
     model_config = {"extra": "allow"}
 
 class Tomador(Pessoa):
@@ -89,7 +86,6 @@ class Frete(BaseModel):
     Destinatario: Optional[Pessoa] = None
     Remetente: Optional[Pessoa] = None
     Tomador: Optional[Tomador] = None
-
     model_config = {"extra": "allow"}
 
 # ITEM
@@ -104,7 +100,6 @@ class Item(BaseModel):
     Formato: Optional[str] = None
     Produtos: Optional[List[Produto]] = None
     Frete: Optional[Frete] = None
-
     model_config = {"extra": "allow"}
 
 # INFOS ADICIONAIS
@@ -122,7 +117,6 @@ class InfosAdicionais(BaseModel):
     IdDestinatario: Optional[str] = None
     Portabilidade: Optional[bool] = None
     SegmentoCliente: Optional[str] = None
-
     model_config = {"extra": "allow"}
 
 # NOTA FISCAL
@@ -136,20 +130,17 @@ class NotaFiscal(BaseModel):
     ValorTotalProdutos: Optional[float] = None
     StringXML: Optional[str] = None
     InfosAdicionais: Optional[Union[InfosAdicionais, dict]] = None
-
     model_config = {"extra": "allow"}
 
-# DEMAIS OBJETOS
+# OUTROS OBJETOS
 class Marketplace(BaseModel):
     Id: Optional[str] = None
     Nome: Optional[str] = None
-
     model_config = {"extra": "allow"}
 
 class Marca(BaseModel):
     Id: Optional[str] = None
     Nome: Optional[str] = None
-
     model_config = {"extra": "allow"}
 
 class Seller(BaseModel):
@@ -167,16 +158,14 @@ class Seller(BaseModel):
     Estado: Optional[str] = None
     Pais: Optional[str] = None
     CEP: Optional[str] = None
-
     model_config = {"extra": "allow"}
 
 class CanalDeVenda(BaseModel):
     Id: Optional[str] = None
     Nome: Optional[str] = None
-
     model_config = {"extra": "allow"}
 
-# ROOT OBJECT
+# ✅ SCHEMA PRINCIPAL
 class DispatchToutbox(BaseModel):
     CriacaoPedido: Optional[str] = None
     DataPagamento: Optional[str] = None
@@ -190,7 +179,6 @@ class DispatchToutbox(BaseModel):
     Marketplace: Optional[Marketplace] = None
     Marca: Optional[Marca] = None
     Seller: Optional[Seller] = None
-
     CanalDeVenda: Optional[CanalDeVenda] = None
     Warehouse: Optional[str] = None
     UnidadeDeNegocio: Optional[str] = None
@@ -201,4 +189,10 @@ class DispatchToutbox(BaseModel):
     NotaFiscal: Optional[NotaFiscal] = None
     InfosAdicionais: Optional[InfosAdicionais] = None
 
+    VersaoSchema: Optional[str] = "v2.11.3"  # ⬅️ Campo sentinela aqui
+
     model_config = {"extra": "allow"}
+
+# (Se usar herança em outro schema)
+class RotaPayload(DispatchToutbox):
+    pass
