@@ -4,10 +4,9 @@ import os
 
 from app.routes import dispatch, patch, rastro, motorista, rota, cancelamento
 from app.database import engine, Base
-from app.schemas.dispatch import DispatchToutbox  # Import para verificação
+from app.schemas.dispatch import DispatchToutbox
 
 load_dotenv()
-
 app = FastAPI()
 
 API_KEY = os.getenv("API_KEY")
@@ -20,7 +19,7 @@ async def verify_api_key(x_api_key: str = Header(None)):
 async def root():
     return {"message": "API rodando com sucesso!"}
 
-# ⛓️ Protegendo todas as rotas com API Key
+# Inclui todas as rotas protegidas por API key
 app.include_router(dispatch.router, dependencies=[Depends(verify_api_key)])
 app.include_router(patch.router, dependencies=[Depends(verify_api_key)])
 app.include_router(rastro.router, dependencies=[Depends(verify_api_key)])
@@ -28,13 +27,11 @@ app.include_router(motorista.router, dependencies=[Depends(verify_api_key)])
 app.include_router(rota.router, dependencies=[Depends(verify_api_key)])
 app.include_router(cancelamento.router, dependencies=[Depends(verify_api_key)])
 
-# ✅ Evento de inicialização para verificar o schema usado
 @app.on_event("startup")
 async def startup_event():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
-    # Diagnóstico dos tipos do schema DispatchToutbox
     print("🔎 DispatchToutbox carregado de:", DispatchToutbox.__module__)
     print("📋 Tipos dos campos:")
     for campo, tipo in DispatchToutbox.__annotations__.items():
