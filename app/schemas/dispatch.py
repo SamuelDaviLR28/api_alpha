@@ -107,8 +107,12 @@ class Item(MeuBaseModel):
     Produtos: Optional[List[Produto]] = None
     Frete: Optional[Frete] = None
 
-# INFOS ADICIONAIS
+# INFOS ADICIONAIS com print
 class InfosAdicionais(MeuBaseModel):
+    def __init__(__pydantic_self__, **data):
+        print("📋 [DEBUG] InfosAdicionais instanciada de:", __pydantic_self__.__module__)
+        super().__init__(**data)
+
     CartaoPostagem: Optional[str] = None
     CodigoAdmnistrativo: Optional[str] = None
     ContratoCorreios: Optional[str] = None
@@ -123,8 +127,12 @@ class InfosAdicionais(MeuBaseModel):
     Portabilidade: Optional[bool] = None
     SegmentoCliente: Optional[str] = None
 
-# NOTA FISCAL
+# NOTA FISCAL com print
 class NotaFiscal(MeuBaseModel):
+    def __init__(__pydantic_self__, **data):
+        print("🧾 [DEBUG] NotaFiscal instanciada de:", __pydantic_self__.__module__)
+        super().__init__(**data)
+
     Numero: Optional[Union[int, str]] = None
     Serie: Optional[Union[int, str]] = None
     Cfop: Optional[str] = None
@@ -164,7 +172,7 @@ class CanalDeVenda(MeuBaseModel):
     Id: Optional[str] = None
     Nome: Optional[str] = None
 
-# ✅ ROOT SCHEMA
+# ROOT SCHEMA
 class DispatchToutbox(MeuBaseModel):
     CriacaoPedido: Optional[str] = None
     DataPagamento: Optional[str] = None
@@ -191,14 +199,4 @@ class DispatchToutbox(MeuBaseModel):
     VersaoSchema: Optional[str] = "v2.11.3"
 
     def __init__(__pydantic_self__, **data):
-        print("🧠 [DEBUG] Instanciando DispatchToutbox de:", __pydantic_self__.__module__)
-        super().__init__(**data)
-
-class RotaPayload(DispatchToutbox):
-    pass
-
-# 🔁 Rebuilds finais
-Frete.model_rebuild()
-NotaFiscal.model_rebuild()
-InfosAdicionais.model_rebuild()
-DispatchToutbox.model_rebuild()
+        print("🧠 [DEBUG] Inst
