@@ -156,8 +156,6 @@ class DispatchToutbox(MeuBaseModel):
     Itens: Optional[List[Item]] = Field(default=None, alias="Itens")
     NotaFiscal: Optional[NotaFiscal] = None
     InfosAdicionais: Optional[InfosAdicionais] = None
-    Transportadora: Optional[Union[Transportadora, dict]] = None
-    Tomador: Optional[Union[Tomador, dict]] = None
     VersaoSchema: Optional[str] = "v2.11.3"
 
     def __init__(__pydantic_self__, **data):
@@ -165,15 +163,11 @@ class DispatchToutbox(MeuBaseModel):
         super().__init__(**data)
 
     @root_validator(pre=True)
-    def parse_nested_models(cls, values):
+    def parse_nested_fields(cls, values):
         if "NotaFiscal" in values and isinstance(values["NotaFiscal"], dict):
             values["NotaFiscal"] = NotaFiscal(**values["NotaFiscal"])
         if "InfosAdicionais" in values and isinstance(values["InfosAdicionais"], dict):
             values["InfosAdicionais"] = InfosAdicionais(**values["InfosAdicionais"])
-        if "Transportadora" in values and isinstance(values["Transportadora"], dict):
-            values["Transportadora"] = Transportadora(**values["Transportadora"])
-        if "Tomador" in values and isinstance(values["Tomador"], dict):
-            values["Tomador"] = Tomador(**values["Tomador"])
         if "Itens" in values and isinstance(values["Itens"], list):
             coerced = []
             for i in values["Itens"]:
@@ -184,11 +178,17 @@ class DispatchToutbox(MeuBaseModel):
                 else:
                     coerced.append(i)
             values["Itens"] = coerced
+        # Absorve Transportadora e Tomador diretamente
+        if "Transportadora" in values and isinstance(values["Transportadora"], dict):
+            transportadora = Transportadora(**values["Transportadora"])
+            if values.get("Itens"):
+                values["Itens"][0].setdefault("Frete", {})["Transportadora"] = transportadora
+            del values["Transportadora"]
+        if "Tomador" in values and isinstance(values["Tomador"], dict):
+            tomador = Tomador(**values["Tomador"])
+            if values.get("Itens"):
+                values["Itens"][0].setdefault("Frete", {})["Tomador"] = tomador
+            del values["Tomador"]
         return values
-
-class RotaPayload(DispatchToutbox):
-    pass
-
-Frete.model_rebuild()
 NotaFiscal.model_rebuild()
 InfosAdicionais
