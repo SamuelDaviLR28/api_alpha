@@ -103,10 +103,6 @@ class Item(MeuBaseModel):
     Frete: Optional[Frete] = None
 
 class InfosAdicionais(MeuBaseModel):
-    def __init__(__pydantic_self__, **data):
-        print("📋 [DEBUG] InfosAdicionais instanciada de:", __pydantic_self__.__module__)
-        super().__init__(**data)
-
     CartaoPostagem: Optional[str] = None
     CodigoAdmnistrativo: Optional[str] = None
     ContratoCorreios: Optional[str] = None
@@ -122,10 +118,6 @@ class InfosAdicionais(MeuBaseModel):
     SegmentoCliente: Optional[str] = None
 
 class NotaFiscal(MeuBaseModel):
-    def __init__(__pydantic_self__, **data):
-        print("🧾 [DEBUG] NotaFiscal instanciada de:", __pydantic_self__.__module__)
-        super().__init__(**data)
-
     Numero: Optional[Union[int, str]] = None
     Serie: Optional[Union[int, str]] = None
     Cfop: Optional[str] = None
@@ -158,17 +150,12 @@ class DispatchToutbox(MeuBaseModel):
     InfosAdicionais: Optional[InfosAdicionais] = None
     VersaoSchema: Optional[str] = "v2.11.3"
 
-    def __init__(__pydantic_self__, **data):
-        print("🧠 [DEBUG] Instanciando DispatchToutbox de:", __pydantic_self__.__module__)
-        super().__init__(**data)
-
     @root_validator(pre=True)
     def parse_nested_fields(cls, values):
         if "NotaFiscal" in values and isinstance(values["NotaFiscal"], dict):
             values["NotaFiscal"] = NotaFiscal(**values["NotaFiscal"])
         if "InfosAdicionais" in values and isinstance(values["InfosAdicionais"], dict):
             values["InfosAdicionais"] = InfosAdicionais(**values["InfosAdicionais"])
-
         if "Itens" in values and isinstance(values["Itens"], list):
             coerced = []
             for i in values["Itens"]:
@@ -176,24 +163,7 @@ class DispatchToutbox(MeuBaseModel):
                     i["Frete"] = Frete(**i["Frete"])
                 coerced.append(Item(**i) if isinstance(i, dict) else i)
             values["Itens"] = coerced
-
-        if "Transportadora" in values and isinstance(values["Transportadora"], dict):
-            transportadora = Transportadora(**values["Transportadora"])
-            if values.get("Itens") and isinstance(values["Itens"][0], dict):
-                values["Itens"][0].setdefault("Frete", {})["Transportadora"] = transportadora
-            del values["Transportadora"]
-
-        if "Tomador" in values and isinstance(values["Tomador"], dict):
-            tomador = Tomador(**values["Tomador"])
-            if values.get("Itens"):
-                values["Itens"][0].setdefault("Frete", {})["Tomador"] = tomador
-            del values["Tomador"]
+        return values
 
 class RotaPayload(DispatchToutbox):
     pass
-
-# Garante que os modelos com alias e campos aninhados sejam corretamente reconstruídos
-Frete.model_rebuild()
-NotaFiscal.model_rebuild()
-InfosAdicionais.model_rebuild()
-DispatchToutbox.model_rebuild()
