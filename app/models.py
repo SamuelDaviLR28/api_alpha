@@ -1,76 +1,45 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Float
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, JSON, DateTime
+from sqlalchemy.sql import func
 from app.database import Base
-from datetime import datetime
 
-class Pedido(Base):
-    __tablename__ = "pedidos"
+
+class Dispatch(Base):
+    __tablename__ = "dispatches"
     id = Column(Integer, primary_key=True, index=True)
-    cliente = Column(String, index=True)
-    destino = Column(String)
-    data_criacao = Column(DateTime, default=datetime.utcnow)
+    order_id = Column(String(100), index=True)
+    unique_id = Column(String(100), unique=True)
+    client_info = Column(JSON)
+    recipient_info = Column(JSON)
+    invoice_info = Column(JSON)
+    origin_info = Column(JSON)
+    volumes = Column(JSON)
 
-    patches = relationship("Patch", back_populates="pedido")
-    ocorrencias = relationship("Ocorrencia", back_populates="pedido")
-    motoristas = relationship("Motorista", back_populates="pedido")
-    cancelamentos_suspensoes = relationship("CancelamentoSuspensao", back_populates="pedido")
-    rotas = relationship("Rota", back_populates="pedido")
+class Cancelamento(Base):
+    __tablename__ = "cancelamentos"
+    id = Column(Integer, primary_key=True, index=True)
+    dados = Column(JSON)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class Patch(Base):
     __tablename__ = "patches"
     id = Column(Integer, primary_key=True, index=True)
-    pedido_id = Column(Integer, ForeignKey("pedidos.id"), index=True)
-    valor = Column(Float)
-    prazo = Column(String)
+    dados = Column(JSON)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    pedido = relationship("Pedido", back_populates="patches")
-
-class Ocorrencia(Base):
-    __tablename__ = "ocorrencias"
+class Rastro(Base):
+    __tablename__ = "rastros"
     id = Column(Integer, primary_key=True, index=True)
-    pedido_id = Column(Integer, ForeignKey("pedidos.id"), index=True)
-    status = Column(String)
-    descricao = Column(String)
-    data_registro = Column(DateTime, default=datetime.utcnow)
-
-    pedido = relationship("Pedido", back_populates="ocorrencias")
+    dados = Column(JSON)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class Motorista(Base):
     __tablename__ = "motoristas"
     id = Column(Integer, primary_key=True, index=True)
-    pedido_id = Column(Integer, ForeignKey("pedidos.id"), index=True)
-    nome = Column(String)
-    documento = Column(String)
-
-    pedido = relationship("Pedido", back_populates="motoristas")
-    rotas = relationship("Rota", back_populates="motorista")
+    dados = Column(JSON)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class Rota(Base):
     __tablename__ = "rotas"
     id = Column(Integer, primary_key=True, index=True)
-    pedido_id = Column(Integer, ForeignKey("pedidos.id"), index=True)
-    motorista_id = Column(Integer, ForeignKey("motoristas.id"), index=True)
-
-    pedido = relationship("Pedido", back_populates="rotas")
-    motorista = relationship("Motorista", back_populates="rotas")
-    coordenadas = relationship("Coordenada", back_populates="rota")
-
-class Coordenada(Base):
-    __tablename__ = "coordenadas"
-    id = Column(Integer, primary_key=True, index=True)
-    rota_id = Column(Integer, ForeignKey("rotas.id"), index=True)
-    latitude = Column(Float)
-    longitude = Column(Float)
-    timestamp = Column(DateTime)
-
-    rota = relationship("Rota", back_populates="coordenadas")
-
-class CancelamentoSuspensao(Base):
-    __tablename__ = "cancelamentos_suspensoes"
-    id = Column(Integer, primary_key=True, index=True)
-    pedido_id = Column(Integer, ForeignKey("pedidos.id"), index=True)
-    acao = Column(String)
-    motivo = Column(String)
-    data_solicitacao = Column(DateTime, default=datetime.utcnow)
-
-    pedido = relationship("Pedido", back_populates="cancelamentos_suspensoes")
+    dados = Column(JSON)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())

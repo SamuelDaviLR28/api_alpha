@@ -1,26 +1,26 @@
-from dotenv import load_dotenv
-from pathlib import Path
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import sessionmaker, declarative_base
 import os
+from dotenv import load_dotenv
 
-# Carregar .env no módulo database
-env_path = Path(__file__).parent.parent / '.env'
-load_dotenv(dotenv_path=env_path)
+# Carregar variáveis do .env
+load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+# Obter a URL do banco de dados
+DB_URL = os.getenv("DATABASE_URL")
 
-if not DATABASE_URL:
-    raise ValueError("DATABASE_URL não definido nas variáveis de ambiente (.env)")
+if DB_URL is None:
+    raise ValueError("DATABASE_URL não encontrado no .env")
 
-DATABASE_URL = DATABASE_URL.strip()
+# Criar o engine assíncrono
+engine = create_async_engine(DB_URL, echo=True)
 
-# resto do seu código SQLAlchemy aqui...
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+# Criar a sessão local corretamente
+SessionLocal = sessionmaker(
+    bind=engine,
+    expire_on_commit=False,
+    class_=AsyncSession
+)
 
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# Criar a base declarativa
 Base = declarative_base()
-
-def get_connection():
-    return SessionLocal()
