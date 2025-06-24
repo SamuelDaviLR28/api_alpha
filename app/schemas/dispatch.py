@@ -185,7 +185,9 @@ class DispatchToutbox(MeuBaseModel):
 
         if "Tomador" in values and isinstance(values["Tomador"], dict):
             tomador = Tomador(**values["Tomador"])
-            if values.get("Itens")
+            if values.get("Itens"):
+                values["Itens"][0].setdefault("Frete", {})["Tomador"] = tomador
+            del values["Tomador"]
 
 class RotaPayload(DispatchToutbox):
     pass
