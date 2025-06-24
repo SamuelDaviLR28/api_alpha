@@ -8,6 +8,18 @@ from app.database import SessionLocal
 from app.models import Dispatch
 from app.schemas.dispatch import DispatchToutbox
 
+router = APIRouter(prefix="/hooks/vivo")  # 👈 Isso estava faltando antes
+
+API_KEY = os.getenv("API_KEY")
+
+async def get_db():
+    async with SessionLocal() as session:
+        yield session
+
+async def verify_api_key(x_api_key: str = Header(None)):
+    if not x_api_key or x_api_key != API_KEY:
+        raise HTTPException(status_code=401, detail="API Key inválida")
+
 @router.post("/dispatch", dependencies=[Depends(verify_api_key)], status_code=201)
 async def receive_dispatch(
     payload: DispatchToutbox,
