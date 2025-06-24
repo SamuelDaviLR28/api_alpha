@@ -149,8 +149,13 @@ class DispatchToutbox(MeuBaseModel):
     InfosAdicionais: Optional[InfosAdicionais] = None
     VersaoSchema: Optional[str] = "v2.11.3"
 
+    # 👇 adiciona aqui os campos problemáticos para não quebrar a validação
+    Transportadora: Optional[dict] = None
+    Tomador: Optional[dict] = None
+
     @root_validator(pre=True)
     def remove_extraneous_fields(cls, values):
+        # 👇 remove antes que cause erro no parse
         values.pop("Transportadora", None)
         values.pop("Tomador", None)
 
