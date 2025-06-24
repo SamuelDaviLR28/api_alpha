@@ -12,7 +12,6 @@ class MeuBaseModel(BaseModel):
         populate_by_name=True
     )
 
-# PRODUTO
 class Produto(MeuBaseModel):
     Descricao: Optional[str] = None
     Altura: Optional[float] = None
@@ -27,7 +26,6 @@ class Produto(MeuBaseModel):
     TipoProduto: Optional[str] = None
     Fabricante: Optional[str] = None
 
-# TRANSPORTADORA
 class Transportadora(MeuBaseModel):
     Id: Optional[str] = None
     Nome: Optional[str] = None
@@ -59,7 +57,6 @@ class Transportadora(MeuBaseModel):
     TipoPrioridade: Optional[str] = None
     ServicosAdicionais: Optional[str] = None
 
-# PESSOA
 class Pessoa(MeuBaseModel):
     Nome: Optional[str] = None
     CPFCNPJ: Optional[str] = None
@@ -87,14 +84,12 @@ class Pessoa(MeuBaseModel):
 class Tomador(Pessoa):
     pass
 
-# FRETE
 class Frete(MeuBaseModel):
     Transportadora: Optional[Transportadora] = None
     Destinatario: Optional[Pessoa] = None
     Remetente: Optional[Pessoa] = None
     Tomador: Optional[Tomador] = None
 
-# ITEM
 class Item(MeuBaseModel):
     IdUnico: Optional[str] = None
     QuantidadeProdutos: Optional[int] = None
@@ -107,7 +102,6 @@ class Item(MeuBaseModel):
     Produtos: Optional[List[Produto]] = None
     Frete: Optional[Frete] = None
 
-# INFOS ADICIONAIS
 class InfosAdicionais(MeuBaseModel):
     def __init__(__pydantic_self__, **data):
         print("📋 [DEBUG] InfosAdicionais instanciada de:", __pydantic_self__.__module__)
@@ -127,7 +121,6 @@ class InfosAdicionais(MeuBaseModel):
     Portabilidade: Optional[bool] = None
     SegmentoCliente: Optional[str] = None
 
-# NOTA FISCAL
 class NotaFiscal(MeuBaseModel):
     def __init__(__pydantic_self__, **data):
         print("🧾 [DEBUG] NotaFiscal instanciada de:", __pydantic_self__.__module__)
@@ -143,36 +136,6 @@ class NotaFiscal(MeuBaseModel):
     StringXML: Optional[str] = None
     InfosAdicionais: Optional[Union[InfosAdicionais, dict]] = None
 
-# OBJETOS EXTERNOS
-class Marketplace(MeuBaseModel):
-    Id: Optional[str] = None
-    Nome: Optional[str] = None
-
-class Marca(MeuBaseModel):
-    Id: Optional[str] = None
-    Nome: Optional[str] = None
-
-class Seller(MeuBaseModel):
-    Id: Optional[str] = None
-    RazaoSocial: Optional[str] = None
-    NomeFantasia: Optional[str] = None
-    CNPJ: Optional[str] = None
-    Contato: Optional[str] = None
-    Email: Optional[str] = None
-    Endereco: Optional[str] = None
-    Numero: Optional[str] = None
-    Complemento: Optional[str] = None
-    Bairro: Optional[str] = None
-    Cidade: Optional[str] = None
-    Estado: Optional[str] = None
-    Pais: Optional[str] = None
-    CEP: Optional[str] = None
-
-class CanalDeVenda(MeuBaseModel):
-    Id: Optional[str] = None
-    Nome: Optional[str] = None
-
-# ROOT SCHEMA
 class DispatchToutbox(MeuBaseModel):
     CriacaoPedido: Optional[str] = None
     DataPagamento: Optional[str] = None
@@ -182,20 +145,17 @@ class DispatchToutbox(MeuBaseModel):
     NumeroPedidoErp: Optional[str] = None
     NumeroPedidoAux: Optional[str] = None
     IdsAuxiliares: Optional[str] = None
-
-    Marketplace: Optional[Marketplace] = None
-    Marca: Optional[Marca] = None
-    Seller: Optional[Seller] = None
-    CanalDeVenda: Optional[CanalDeVenda] = None
+    Marketplace: Optional[dict] = None
+    Marca: Optional[dict] = None
+    Seller: Optional[dict] = None
+    CanalDeVenda: Optional[dict] = None
     Warehouse: Optional[str] = None
     UnidadeDeNegocio: Optional[str] = None
     Rede: Optional[str] = None
     Campanha: Optional[str] = None
-
     Itens: Optional[List[Item]] = Field(default=None, alias="Itens")
     NotaFiscal: Optional[NotaFiscal] = None
     InfosAdicionais: Optional[InfosAdicionais] = None
-
     VersaoSchema: Optional[str] = "v2.11.3"
 
     def __init__(__pydantic_self__, **data):
@@ -204,3 +164,8 @@ class DispatchToutbox(MeuBaseModel):
 
 class RotaPayload(DispatchToutbox):
     pass
+
+Frete.model_rebuild()
+NotaFiscal.model_rebuild()
+InfosAdicionais.model_rebuild()
+DispatchToutbox.model_rebuild()
