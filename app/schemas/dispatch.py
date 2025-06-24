@@ -164,7 +164,7 @@ class CanalDeVenda(MeuBaseModel):
     Id: Optional[str] = None
     Nome: Optional[str] = None
 
-# ROOT SCHEMA com Itens_ para diagnóstico
+# ✅ ROOT SCHEMA
 class DispatchToutbox(MeuBaseModel):
     CriacaoPedido: Optional[str] = None
     DataPagamento: Optional[str] = None
@@ -194,11 +194,10 @@ class DispatchToutbox(MeuBaseModel):
         print("🧠 [DEBUG] Instanciando DispatchToutbox de:", __pydantic_self__.__module__)
         super().__init__(**data)
 
-# Derivado (sem alteração necessária para o teste)
 class RotaPayload(DispatchToutbox):
     pass
 
-# Forçar rebuilds
+# 🔁 Rebuilds finais
 Frete.model_rebuild()
 NotaFiscal.model_rebuild()
 InfosAdicionais.model_rebuild()
