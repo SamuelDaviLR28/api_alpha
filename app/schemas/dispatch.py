@@ -156,6 +156,8 @@ class DispatchToutbox(MeuBaseModel):
     Itens: Optional[List[Item]] = Field(default=None, alias="Itens")
     NotaFiscal: Optional[NotaFiscal] = None
     InfosAdicionais: Optional[InfosAdicionais] = None
+    Transportadora: Optional[Union[Transportadora, dict]] = None
+    Tomador: Optional[Union[Tomador, dict]] = None
     VersaoSchema: Optional[str] = "v2.11.3"
 
     def __init__(__pydantic_self__, **data):
@@ -168,6 +170,10 @@ class DispatchToutbox(MeuBaseModel):
             values["NotaFiscal"] = NotaFiscal(**values["NotaFiscal"])
         if "InfosAdicionais" in values and isinstance(values["InfosAdicionais"], dict):
             values["InfosAdicionais"] = InfosAdicionais(**values["InfosAdicionais"])
+        if "Transportadora" in values and isinstance(values["Transportadora"], dict):
+            values["Transportadora"] = Transportadora(**values["Transportadora"])
+        if "Tomador" in values and isinstance(values["Tomador"], dict):
+            values["Tomador"] = Tomador(**values["Tomador"])
         if "Itens" in values and isinstance(values["Itens"], list):
             coerced = []
             for i in values["Itens"]:
@@ -185,5 +191,4 @@ class RotaPayload(DispatchToutbox):
 
 Frete.model_rebuild()
 NotaFiscal.model_rebuild()
-InfosAdicionais.model_rebuild()
-DispatchToutbox.model_rebuild()
+InfosAdicionais
