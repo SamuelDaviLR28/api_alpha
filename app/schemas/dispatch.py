@@ -151,11 +151,21 @@ class DispatchToutbox(MeuBaseModel):
     VersaoSchema: Optional[str] = "v2.11.3"
 
     @root_validator(pre=True)
-    def parse_nested_fields(cls, values):
+    def remove_extraneous_fields(cls, values):
+        if "Transportadora" in values and isinstance(values["Transportadora"], dict):
+            print("🚫 Ignorando 'Transportadora' fora de Frete")
+            values.pop("Transportadora")
+
+        if "Tomador" in values and isinstance(values["Tomador"], dict):
+            print("🚫 Ignorando 'Tomador' fora de Frete")
+            values.pop("Tomador")
+
         if "NotaFiscal" in values and isinstance(values["NotaFiscal"], dict):
             values["NotaFiscal"] = NotaFiscal(**values["NotaFiscal"])
+
         if "InfosAdicionais" in values and isinstance(values["InfosAdicionais"], dict):
             values["InfosAdicionais"] = InfosAdicionais(**values["InfosAdicionais"])
+
         if "Itens" in values and isinstance(values["Itens"], list):
             coerced = []
             for i in values["Itens"]:
@@ -163,10 +173,6 @@ class DispatchToutbox(MeuBaseModel):
                     i["Frete"] = Frete(**i["Frete"])
                 coerced.append(Item(**i) if isinstance(i, dict) else i)
             values["Itens"] = coerced
-
-        # Limpa campos soltos fora da estrutura esperada
-        values.pop("Transportadora", None)
-        values.pop("Tomador", None)
 
         return values
 
