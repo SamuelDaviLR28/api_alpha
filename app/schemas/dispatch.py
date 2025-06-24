@@ -2,10 +2,8 @@ from __future__ import annotations
 from typing import List, Optional, Union
 from pydantic import BaseModel, ConfigDict
 
-
 def to_snake_case(alias: str) -> str:
     return alias[0].lower() + ''.join(['_' + c.lower() if c.isupper() else c for c in alias[1:]])
-
 
 class MeuBaseModel(BaseModel):
     model_config = ConfigDict(
@@ -13,7 +11,6 @@ class MeuBaseModel(BaseModel):
         alias_generator=to_snake_case,
         populate_by_name=True
     )
-
 
 # PRODUTO
 class Produto(MeuBaseModel):
@@ -29,7 +26,6 @@ class Produto(MeuBaseModel):
     NumeroDeSerie: Optional[str] = None
     TipoProduto: Optional[str] = None
     Fabricante: Optional[str] = None
-
 
 # TRANSPORTADORA
 class Transportadora(MeuBaseModel):
@@ -63,7 +59,6 @@ class Transportadora(MeuBaseModel):
     TipoPrioridade: Optional[str] = None
     ServicosAdicionais: Optional[str] = None
 
-
 # PESSOA
 class Pessoa(MeuBaseModel):
     Nome: Optional[str] = None
@@ -89,10 +84,8 @@ class Pessoa(MeuBaseModel):
     Long: Optional[str] = None
     Referencia: Optional[str] = None
 
-
 class Tomador(Pessoa):
     pass
-
 
 # FRETE
 class Frete(MeuBaseModel):
@@ -100,7 +93,6 @@ class Frete(MeuBaseModel):
     Destinatario: Optional[Pessoa] = None
     Remetente: Optional[Pessoa] = None
     Tomador: Optional[Tomador] = None
-
 
 # ITEM
 class Item(MeuBaseModel):
@@ -114,7 +106,6 @@ class Item(MeuBaseModel):
     Formato: Optional[str] = None
     Produtos: Optional[List[Produto]] = None
     Frete: Optional[Frete] = None
-
 
 # INFOS ADICIONAIS
 class InfosAdicionais(MeuBaseModel):
@@ -132,7 +123,6 @@ class InfosAdicionais(MeuBaseModel):
     Portabilidade: Optional[bool] = None
     SegmentoCliente: Optional[str] = None
 
-
 # NOTA FISCAL
 class NotaFiscal(MeuBaseModel):
     Numero: Optional[Union[int, str]] = None
@@ -145,17 +135,14 @@ class NotaFiscal(MeuBaseModel):
     StringXML: Optional[str] = None
     InfosAdicionais: Optional[Union[InfosAdicionais, dict]] = None
 
-
 # OBJETOS EXTERNOS
 class Marketplace(MeuBaseModel):
     Id: Optional[str] = None
     Nome: Optional[str] = None
 
-
 class Marca(MeuBaseModel):
     Id: Optional[str] = None
     Nome: Optional[str] = None
-
 
 class Seller(MeuBaseModel):
     Id: Optional[str] = None
@@ -173,13 +160,11 @@ class Seller(MeuBaseModel):
     Pais: Optional[str] = None
     CEP: Optional[str] = None
 
-
 class CanalDeVenda(MeuBaseModel):
     Id: Optional[str] = None
     Nome: Optional[str] = None
 
-
-# ✅ ROOT SCHEMA
+# ROOT SCHEMA com Itens_ para diagnóstico
 class DispatchToutbox(MeuBaseModel):
     CriacaoPedido: Optional[str] = None
     DataPagamento: Optional[str] = None
@@ -199,21 +184,21 @@ class DispatchToutbox(MeuBaseModel):
     Rede: Optional[str] = None
     Campanha: Optional[str] = None
 
-    Itens: Optional[List[Item]] = None
+    Itens_: Optional[List[Item]] = None
     NotaFiscal: Optional[NotaFiscal] = None
     InfosAdicionais: Optional[InfosAdicionais] = None
 
     VersaoSchema: Optional[str] = "v2.11.3"
 
     def __init__(__pydantic_self__, **data):
-        print(" [DEBUG] Instanciando DispatchToutbox de:", __pydantic_self__.__module__)
+        print("🧠 [DEBUG] Instanciando DispatchToutbox de:", __pydantic_self__.__module__)
         super().__init__(**data)
 
-
-# Derivado
+# Derivado (sem alteração necessária para o teste)
 class RotaPayload(DispatchToutbox):
     pass
-# Força rebuild das anotações após todas as definições
+
+# Forçar rebuilds
 Frete.model_rebuild()
 NotaFiscal.model_rebuild()
 InfosAdicionais.model_rebuild()
