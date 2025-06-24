@@ -1,48 +1,38 @@
-from fastapi import APIRouter, Depends, Header, HTTPException, status, Request
-from fastapi.encoders import jsonable_encoder
+from fastapi import APIRouter, Request, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-import os
+from fastapi.encoders import jsonable_encoder
 
-from app.database import SessionLocal
-from app.models import Dispatch
 from app.schemas.dispatch import DispatchToutbox
+from app.models import Dispatch
+from app.database import SessionLocal
 
-router = APIRouter(prefix="/hooks/vivo")  # 👈 Isso estava faltando antes
-
-API_KEY = os.getenv("API_KEY")
+router = APIRouter(prefix="/hooks/vivo")
 
 async def get_db():
     async with SessionLocal() as session:
         yield session
 
-async def verify_api_key(x_api_key: str = Header(None)):
-    if not x_api_key or x_api_key != API_KEY:
-        raise HTTPException(status_code=401, detail="API Key inválida")
-
-@router.post("/dispatch", dependencies=[Depends(verify_api_key)], status_code=201)
+@router.post("/dispatch", status_code=201)
 async def receive_dispatch(
-    payload: DispatchToutbox,
-    db: AsyncSession = Depends(get_db),
-    request: Request = None
+    request: Request,
+    db: AsyncSession = Depends(get_db)
 ):
-    print("🔍 DispatchToutbox carregado de:", DispatchToutbox.__module__)
-    print("📋 Campos e tipos do schema:")
-    for campo, tipo in DispatchToutbox.__annotations__.items():
-        print(f" - {campo}: {tipo}")
-
     try:
-        item = payload.Itens[0] if payload.Itens else None
-        frete = item.Frete if item else None
+        body = await request.json()
 
-        print("📦 Frete →", type(frete))
-        print("   ⤷ Módulo:", type(frete).__module__ if frete else "None")
-        print("🧾 NotaFiscal →", type(payload.NotaFiscal))
-        print("   ⤷ Módulo:", type(payload.NotaFiscal).__module__ if payload.NotaFiscal else "None")
-        print("📋 InfosAdicionais →", type(payload.InfosAdicionais))
-        print("   ⤷ Módulo:", type(payload.InfosAdicionais).__module__ if payload.InfosAdicionais else "None")
+        # 🧹 Remove campos soltos no root
+        body.pop("Transportadora", None)
+        body.pop("Tomador", None)
+
+        # 👇 Faz parse manual usando seu modelo Pydantic
+        payload = DispatchToutbox(**body)
     except Exception as e:
-        print("🚨 Erro durante diagnóstico dos campos:", e)
+        print("🚨 Erro ao parsear DispatchToutbox:", str(e))
+        raise HTTPException(status_code=422, detail=f"Erro ao processar JSON: {str(e)}")
+
+    item = payload.Itens[0] if payload.Itens else None
+    frete = item.Frete if item else None
 
     unique_id = payload.NumeroPedidoErp
     if unique_id:
@@ -51,22 +41,18 @@ async def receive_dispatch(
         if res.scalars().first():
             return {"message": "Dispatch já cadastrado", "unique_id": unique_id}
 
-    order_id = payload.NumeroPedido
     canal_de_venda = payload.CanalDeVenda
-    itens = payload.Itens or []
-
-    destinatario = None
-    remetente = None
     nota_fiscal = payload.NotaFiscal
     infos_adicionais = payload.InfosAdicionais
+    itens = payload.Itens or []
 
     dispatch_data = {
-        "order_id": order_id,
+        "order_id": payload.NumeroPedido,
         "unique_id": unique_id,
         "client_info": jsonable_encoder(canal_de_venda),
-        "recipient_info": jsonable_encoder(destinatario),
+        "recipient_info": None,
         "invoice_info": jsonable_encoder(nota_fiscal),
-        "origin_info": jsonable_encoder(remetente),
+        "origin_info": None,
         "volumes": jsonable_encoder(itens),
     }
 
