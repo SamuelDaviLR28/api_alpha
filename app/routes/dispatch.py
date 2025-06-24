@@ -1,36 +1,26 @@
-from fastapi.encoders import jsonable_encoder
-from fastapi import APIRouter, Depends, Header, HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
-import os
-
-from app.database import SessionLocal
-from app.models import Dispatch
-from app.schemas.dispatch import DispatchToutbox
-
-router = APIRouter(prefix="/hooks/vivo")
-API_KEY = os.getenv("API_KEY")
-
-
-async def get_db():
-    async with SessionLocal() as session:
-        yield session
-
-
-async def verify_api_key(x_api_key: str = Header(None)):
-    if not x_api_key or x_api_key != API_KEY:
-        raise HTTPException(status_code=401, detail="API Key inválida")
-
-
 @router.post("/dispatch", dependencies=[Depends(verify_api_key)], status_code=201)
 async def receive_dispatch(
     payload: DispatchToutbox,
     db: AsyncSession = Depends(get_db)
 ):
-    #  Diagnóstico: de onde está vindo o schema? E como estão seus campos?
+    # ✅ Diagnóstico para descobrir o tipo real no runtime
     print("🔎 DispatchToutbox carregado de:", DispatchToutbox.__module__)
     print("📋 Tipos dos campos:", DispatchToutbox.__annotations__)
 
+    try:
+        item = payload.Itens[0] if payload.Itens else None
+        frete = item.Frete if item else None
+
+        print("📦 Frete recebido →", type(frete))
+        print("   ⤷ Módulo:", type(frete).__module__)
+        print("🧾 NotaFiscal recebida →", type(payload.NotaFiscal))
+        print("   ⤷ Módulo:", type(payload.NotaFiscal).__module__)
+        print("📋 InfosAdicionais recebida →", type(payload.InfosAdicionais))
+        print("   ⤷ Módulo:", type(payload.InfosAdicionais).__module__)
+    except Exception as e:
+        print("🚨 Erro ao acessar campos:", e)
+
+    # Lógica de duplicidade
     unique_id = payload.NumeroPedidoErp
     if unique_id:
         q = select(Dispatch).filter(Dispatch.unique_id == unique_id)
@@ -44,8 +34,8 @@ async def receive_dispatch(
 
     destinatario = None
     remetente = None
-    nota_fiscal = None
-    infos_adicionais = None
+    nota_fiscal = payload.NotaFiscal
+    infos_adicionais = payload.InfosAdicionais
 
     dispatch_data = {
         "order_id": order_id,
