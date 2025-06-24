@@ -1,10 +1,10 @@
-from fastapi import FastAPI, Header, HTTPException, Depends
+from fastapi import FastAPI, Header, HTTPException, Depends, Request
 from dotenv import load_dotenv
 import os
 
 from app.routes import dispatch, patch, rastro, motorista, rota, cancelamento
 from app.database import engine, Base
-from app.schemas.dispatch import DispatchToutbox
+from app.schemas.dispatch import DispatchToutbox  # Import para verificação
 
 load_dotenv()
 
@@ -18,8 +18,9 @@ async def verify_api_key(x_api_key: str = Header(None)):
 
 @app.get("/")
 async def root():
-    return {"message": "API rodando online com sucesso!"}
+    return {"message": "API rodando com sucesso!"}
 
+# ⛓️ Protegendo todas as rotas com API Key
 app.include_router(dispatch.router, dependencies=[Depends(verify_api_key)])
 app.include_router(patch.router, dependencies=[Depends(verify_api_key)])
 app.include_router(rastro.router, dependencies=[Depends(verify_api_key)])
@@ -27,13 +28,14 @@ app.include_router(motorista.router, dependencies=[Depends(verify_api_key)])
 app.include_router(rota.router, dependencies=[Depends(verify_api_key)])
 app.include_router(cancelamento.router, dependencies=[Depends(verify_api_key)])
 
+# ✅ Evento de inicialização para verificar o schema usado
 @app.on_event("startup")
 async def startup_event():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
-    # Diagnóstico: de onde vem o schema e como está tipado
+    # Diagnóstico dos tipos do schema DispatchToutbox
     print("🔎 DispatchToutbox carregado de:", DispatchToutbox.__module__)
-    print("📋 Tipos esperados:")
+    print("📋 Tipos dos campos:")
     for campo, tipo in DispatchToutbox.__annotations__.items():
         print(f" - {campo}: {tipo}")
