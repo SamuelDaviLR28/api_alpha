@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from fastapi.encoders import jsonable_encoder
 
-from app.schemas.dispatch import DispatchToutbox
+from app.schemas.dispatch import DispatchToutboxV2 as DispatchToutbox
 from app.models import Dispatch
 from app.database import SessionLocal
 
