@@ -118,7 +118,7 @@ class NotaFiscal(BaseModel):
 
     model_config = ConfigDict(extra="ignore")
 
-class DispatchVivoModel(BaseModel):
+class DispatchVivoSchemaFinal(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
     CriacaoPedido: Optional[str] = None
