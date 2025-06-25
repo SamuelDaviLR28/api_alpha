@@ -1,38 +1,30 @@
-from pydantic import BaseModel, Field, root_validator, ConfigDict
-from typing import List, Optional, Union
+from typing import Optional, List, Union, Any
+from pydantic import BaseModel, Field, root_validator
 
-def to_snake_case(alias: str) -> str:
-    return alias[0].lower() + ''.join(['_' + c.lower() if c.isupper() else c for c in alias[1:]])
 
-class MeuBaseModel(BaseModel):
-    model_config = ConfigDict(
-        extra="ignore",  # ← ignora campos inesperados como Transportadora/Tomador soltos
-        alias_generator=to_snake_case,
-        populate_by_name=True
-    )
+# ---------------------- MODELOS AUXILIARES ----------------------
 
-class Produto(MeuBaseModel):
+class Produto(BaseModel):
     Descricao: Optional[str] = None
+    SKU: Optional[str] = None
+    NumeroDeSerie: Optional[str] = None
+    Preco: Optional[float] = None
+    Quantidade: Optional[int] = None
     Altura: Optional[float] = None
     Comprimento: Optional[float] = None
     Largura: Optional[float] = None
     Peso: Optional[float] = None
-    Preco: Optional[float] = None
-    Quantidade: Optional[int] = None
-    SKU: Optional[str] = None
-    CodigoProduto: Optional[str] = None
-    NumeroDeSerie: Optional[str] = None
     TipoProduto: Optional[str] = None
     Fabricante: Optional[str] = None
 
-class Transportadora(MeuBaseModel):
+
+class Transportadora(BaseModel):
     Id: Optional[str] = None
     Nome: Optional[str] = None
     NomeServico: Optional[str] = None
     IdServico: Optional[str] = None
     CodigoRastreio: Optional[str] = None
     ListaPostagem: Optional[str] = None
-    CNPJ: Optional[str] = None
     Reversa: Optional[bool] = None
     Coleta: Optional[bool] = None
     Dispatch: Optional[bool] = None
@@ -46,17 +38,18 @@ class Transportadora(MeuBaseModel):
     ValorAverbadoPago: Optional[float] = None
     ValorDeclarado: Optional[float] = None
     ValorFrete: Optional[float] = None
-    Prioridade: Optional[bool] = None
-    EntregaAgendada: Optional[bool] = None
+    CNPJ: Optional[str] = None
     ResponsavelRecebimento: Optional[str] = None
     SenhaVerificacao: Optional[str] = None
     TipoOperacao: Optional[str] = None
     TipoDevolucao: Optional[str] = None
     MotivoDevolucao: Optional[str] = None
+    Prioridade: Optional[bool] = None
     TipoPrioridade: Optional[str] = None
     ServicosAdicionais: Optional[str] = None
 
-class Pessoa(MeuBaseModel):
+
+class Pessoa(BaseModel):
     Nome: Optional[str] = None
     CPFCNPJ: Optional[str] = None
     Telefone: Optional[str] = None
@@ -73,23 +66,26 @@ class Pessoa(MeuBaseModel):
     Pais: Optional[str] = None
     CEP: Optional[str] = None
     IE: Optional[str] = None
-    Loja: Optional[Union[bool, str]] = None
+    Loja: Optional[Union[str, bool]] = None
     NomeCentroDistribuicao: Optional[str] = None
     CodigoCentroDistribuicao: Optional[str] = None
     Lat: Optional[str] = None
     Long: Optional[str] = None
     Referencia: Optional[str] = None
 
+
 class Tomador(Pessoa):
     pass
 
-class Frete(MeuBaseModel):
+
+class Frete(BaseModel):
     Transportadora: Optional[Transportadora] = None
     Destinatario: Optional[Pessoa] = None
     Remetente: Optional[Pessoa] = None
     Tomador: Optional[Tomador] = None
 
-class Item(MeuBaseModel):
+
+class Item(BaseModel):
     IdUnico: Optional[str] = None
     QuantidadeProdutos: Optional[int] = None
     Volumes: Optional[Union[int, str]] = None
@@ -101,7 +97,8 @@ class Item(MeuBaseModel):
     Produtos: Optional[List[Produto]] = None
     Frete: Optional[Frete] = None
 
-class InfosAdicionais(MeuBaseModel):
+
+class InfosAdicionais(BaseModel):
     CartaoPostagem: Optional[str] = None
     CodigoAdmnistrativo: Optional[str] = None
     ContratoCorreios: Optional[str] = None
@@ -116,7 +113,8 @@ class InfosAdicionais(MeuBaseModel):
     Portabilidade: Optional[bool] = None
     SegmentoCliente: Optional[str] = None
 
-class NotaFiscal(MeuBaseModel):
+
+class NotaFiscal(BaseModel):
     Numero: Optional[Union[int, str]] = None
     Serie: Optional[Union[int, str]] = None
     Cfop: Optional[str] = None
@@ -127,7 +125,10 @@ class NotaFiscal(MeuBaseModel):
     StringXML: Optional[str] = None
     InfosAdicionais: Optional[Union[InfosAdicionais, dict]] = None
 
-class DispatchToutbox(MeuBaseModel):
+
+# ---------------------- MODELO PRINCIPAL ----------------------
+
+class DispatchToutbox(BaseModel):
     CriacaoPedido: Optional[str] = None
     DataPagamento: Optional[str] = None
     NumeroPedido: Optional[str] = None
@@ -149,13 +150,12 @@ class DispatchToutbox(MeuBaseModel):
     InfosAdicionais: Optional[InfosAdicionais] = None
     VersaoSchema: Optional[str] = "v2.11.3"
 
-    # 👇 adiciona aqui os campos problemáticos para não quebrar a validação
-    Transportadora: Optional[dict] = None
-    Tomador: Optional[dict] = None
+    # ⚠️ Adicionado para evitar erro de validação com campos inesperados
+    Transportadora: Optional[Any] = None
+    Tomador: Optional[Any] = None
 
     @root_validator(pre=True)
-    def remove_extraneous_fields(cls, values):
-        # 👇 remove antes que cause erro no parse
+    def remove_extra_fields(cls, values):
         values.pop("Transportadora", None)
         values.pop("Tomador", None)
 
