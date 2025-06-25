@@ -6,10 +6,6 @@ from app.routes import dispatch, patch, rastro, motorista, rota, cancelamento
 from app.database import engine, Base
 from app.schemas.vivo import DispatchVivoSchemaFinal
 
-print("✔️ Schema real usado:", DispatchVivoSchemaFinal.__name__)
-print("✔️ Campos:", DispatchVivoSchemaFinal.model_fields.keys())
-
-
 load_dotenv()
 app = FastAPI()
 
@@ -37,6 +33,6 @@ async def startup_event():
         await conn.run_sync(Base.metadata.create_all)
 
     print("✔️ Schema real usado:", DispatchVivoSchemaFinal.__name__)
-    print("✔️ Campos:", DispatchVivoSchemaFinal.model_fields.keys())
-    for campo, tipo in DispatchToutbox.__annotations__.items():
+    print("✔️ Campos:")
+    for campo, tipo in DispatchVivoSchemaFinal.__annotations__.items():
         print(f" - {campo}: {tipo}")
