@@ -146,15 +146,9 @@ class DispatchVivoSchemaFinal(BaseModel):
         values.pop("Tomador", None)
         return values
 
-import sys
-from pydantic import BaseModel
-
-module = sys.modules[__name__]
-
-for name in dir(module):
-    obj = getattr(module, name)
-    try:
-        if isinstance(obj, type) and issubclass(obj, BaseModel):
-            obj.model_rebuild(force=True)
-    except TypeError:
-        continue 
+# 🔧 Reconstrói apenas os modelos necessários
+Frete.model_rebuild()
+Item.model_rebuild()
+InfosAdicionais.model_rebuild()
+NotaFiscal.model_rebuild()
+DispatchVivoSchemaFinal.model_rebuild()
