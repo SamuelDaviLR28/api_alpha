@@ -120,6 +120,8 @@ class NotaFiscal(BaseModel):
 # ---------------------- MODELO PRINCIPAL ----------------------
 
 class DispatchToutbox(BaseModel):
+    model_config = ConfigDict(extra="ignore")  # Ignora campos inesperados
+
     CriacaoPedido: Optional[str] = None
     DataPagamento: Optional[str] = None
     NumeroPedido: Optional[str] = None
@@ -143,7 +145,6 @@ class DispatchToutbox(BaseModel):
 
     @root_validator(pre=True)
     def remove_extra_fields(cls, values):
-        # Limpa campos inválidos fora de lugar
         values.pop("Transportadora", None)
         values.pop("Tomador", None)
 
