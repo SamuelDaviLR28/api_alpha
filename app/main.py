@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Header, HTTPException, Depends, Request
+from fastapi import FastAPI, Header, HTTPException, Depends
 from dotenv import load_dotenv
 import os
 
@@ -19,7 +19,6 @@ async def verify_api_key(x_api_key: str = Header(None)):
 async def root():
     return {"message": "API rodando com sucesso!"}
 
-# Inclui todas as rotas protegidas por API key
 app.include_router(dispatch.router, dependencies=[Depends(verify_api_key)])
 app.include_router(patch.router, dependencies=[Depends(verify_api_key)])
 app.include_router(rastro.router, dependencies=[Depends(verify_api_key)])
@@ -33,6 +32,3 @@ async def startup_event():
         await conn.run_sync(Base.metadata.create_all)
 
     print("✔️ Schema real usado:", DispatchVivoSchemaFinal.__name__)
-    print("✔️ Campos:")
-    for campo, tipo in DispatchVivoSchemaFinal.__annotations__.items():
-        print(f" - {campo}: {tipo}")
