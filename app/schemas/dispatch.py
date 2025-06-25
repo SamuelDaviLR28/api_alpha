@@ -1,6 +1,5 @@
-from typing import Optional, List, Union, Any
-from pydantic import BaseModel, Field, root_validator
-
+from typing import Optional, List, Union
+from pydantic import BaseModel, Field, root_validator, ConfigDict
 
 # ---------------------- MODELOS AUXILIARES ----------------------
 
@@ -16,7 +15,6 @@ class Produto(BaseModel):
     Peso: Optional[float] = None
     TipoProduto: Optional[str] = None
     Fabricante: Optional[str] = None
-
 
 class Transportadora(BaseModel):
     Id: Optional[str] = None
@@ -48,7 +46,6 @@ class Transportadora(BaseModel):
     TipoPrioridade: Optional[str] = None
     ServicosAdicionais: Optional[str] = None
 
-
 class Pessoa(BaseModel):
     Nome: Optional[str] = None
     CPFCNPJ: Optional[str] = None
@@ -73,17 +70,14 @@ class Pessoa(BaseModel):
     Long: Optional[str] = None
     Referencia: Optional[str] = None
 
-
 class Tomador(Pessoa):
     pass
-
 
 class Frete(BaseModel):
     Transportadora: Optional[Transportadora] = None
     Destinatario: Optional[Pessoa] = None
     Remetente: Optional[Pessoa] = None
     Tomador: Optional[Tomador] = None
-
 
 class Item(BaseModel):
     IdUnico: Optional[str] = None
@@ -96,7 +90,6 @@ class Item(BaseModel):
     Formato: Optional[str] = None
     Produtos: Optional[List[Produto]] = None
     Frete: Optional[Frete] = None
-
 
 class InfosAdicionais(BaseModel):
     CartaoPostagem: Optional[str] = None
@@ -113,7 +106,6 @@ class InfosAdicionais(BaseModel):
     Portabilidade: Optional[bool] = None
     SegmentoCliente: Optional[str] = None
 
-
 class NotaFiscal(BaseModel):
     Numero: Optional[Union[int, str]] = None
     Serie: Optional[Union[int, str]] = None
@@ -124,7 +116,6 @@ class NotaFiscal(BaseModel):
     ValorTotalProdutos: Optional[float] = None
     StringXML: Optional[str] = None
     InfosAdicionais: Optional[Union[InfosAdicionais, dict]] = None
-
 
 # ---------------------- MODELO PRINCIPAL ----------------------
 
@@ -150,12 +141,9 @@ class DispatchToutbox(BaseModel):
     InfosAdicionais: Optional[InfosAdicionais] = None
     VersaoSchema: Optional[str] = "v2.11.3"
 
-    # ⚠️ Adicionado para evitar erro de validação com campos inesperados
-    Transportadora: Optional[Any] = None
-    Tomador: Optional[Any] = None
-
     @root_validator(pre=True)
     def remove_extra_fields(cls, values):
+        # Limpa campos inválidos fora de lugar
         values.pop("Transportadora", None)
         values.pop("Tomador", None)
 
