@@ -1,4 +1,4 @@
-from app.schemas.vivo import DispatchVivoModel as DispatchToutbox
+from app.schemas.vivo import DispatchVivoSchemaFinal
 
-class RotaPayload(DispatchToutbox):
+class RotaPayload(DispatchVivoSchemaFinal):
     pass
