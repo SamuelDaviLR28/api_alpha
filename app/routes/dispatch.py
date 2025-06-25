@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from fastapi.encoders import jsonable_encoder
 
-from app.schemas.vivo import DispatchVivoModel
+from app.schemas.vivo import DispatchVivoSchemaFinal
 from app.models import Dispatch
 from app.database import SessionLocal
 
@@ -17,7 +17,8 @@ async def get_db():
 async def receive_dispatch(request: Request, db: AsyncSession = Depends(get_db)):
     try:
         body = await request.json()
-        payload = DispatchVivoModel(**body)
+        payload = DispatchVivoSchemaFinal(**body)
+
     except Exception as e:
         raise HTTPException(status_code=422, detail=f"Erro ao processar JSON: {str(e)}")
 
