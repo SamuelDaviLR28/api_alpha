@@ -1,3 +1,4 @@
+from __future__ import annotations 
 from typing import Optional, List, Union
 from pydantic import BaseModel, Field, root_validator, ConfigDict
 
@@ -138,8 +139,8 @@ class DispatchVivoSchemaFinal(BaseModel):
     Rede: Optional[str] = None
     Campanha: Optional[str] = None
     Itens: Optional[List[Item]] = Field(default=None, alias="Itens")
-    NotaFiscal: Optional[NotaFiscal] = None
-    InfosAdicionais: Optional[InfosAdicionais] = None
+    NotaFiscal: Optional["NotaFiscal"] = None
+    InfosAdicionais: Optional["InfosAdicionais"] = None
     VersaoSchema: Optional[str] = "v2.11.3"
 
     @root_validator(pre=True)
