@@ -74,6 +74,8 @@ class Frete(BaseModel):
     Remetente: Optional[Pessoa] = None
     Tomador: Optional[Pessoa] = None
 
+    model_config = ConfigDict(extra="ignore")
+
 class Item(BaseModel):
     IdUnico: Optional[str] = None
     QuantidadeProdutos: Optional[int] = None
@@ -101,6 +103,8 @@ class InfosAdicionais(BaseModel):
     Portabilidade: Optional[bool] = None
     SegmentoCliente: Optional[str] = None
 
+    model_config = ConfigDict(extra="ignore")
+
 class NotaFiscal(BaseModel):
     Numero: Optional[Union[int, str]] = None
     Serie: Optional[Union[int, str]] = None
@@ -111,6 +115,8 @@ class NotaFiscal(BaseModel):
     ValorTotalProdutos: Optional[float] = None
     StringXML: Optional[str] = None
     InfosAdicionais: Optional[Union[InfosAdicionais, dict]] = None
+
+    model_config = ConfigDict(extra="ignore")
 
 class DispatchVivoModel(BaseModel):
     model_config = ConfigDict(extra="ignore")
