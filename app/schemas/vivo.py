@@ -1,4 +1,4 @@
-from __future__ import annotations 
+from __future__ import annotations
 from typing import Optional, List, Union
 from pydantic import BaseModel, Field, root_validator, ConfigDict
 
@@ -74,7 +74,6 @@ class Frete(BaseModel):
     Destinatario: Optional[Pessoa] = None
     Remetente: Optional[Pessoa] = None
     Tomador: Optional[Pessoa] = None
-
     model_config = ConfigDict(extra="ignore")
 
 class Item(BaseModel):
@@ -87,7 +86,7 @@ class Item(BaseModel):
     Comprimento: Optional[float] = None
     Formato: Optional[str] = None
     Produtos: Optional[List[Produto]] = None
-    Frete: Optional[Frete] = None
+    Frete: Optional["Frete"] = None
 
 class InfosAdicionais(BaseModel):
     CartaoPostagem: Optional[str] = None
@@ -103,7 +102,6 @@ class InfosAdicionais(BaseModel):
     IdDestinatario: Optional[str] = None
     Portabilidade: Optional[bool] = None
     SegmentoCliente: Optional[str] = None
-
     model_config = ConfigDict(extra="ignore")
 
 class NotaFiscal(BaseModel):
@@ -115,8 +113,7 @@ class NotaFiscal(BaseModel):
     ValorTotal: Optional[float] = None
     ValorTotalProdutos: Optional[float] = None
     StringXML: Optional[str] = None
-    InfosAdicionais: Optional[Union[InfosAdicionais, dict]] = None
-
+    InfosAdicionais: Optional[Union["InfosAdicionais", dict]] = None
     model_config = ConfigDict(extra="ignore")
 
 class DispatchVivoSchemaFinal(BaseModel):
