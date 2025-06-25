@@ -150,7 +150,11 @@ import sys
 from pydantic import BaseModel
 
 module = sys.modules[__name__]
+
 for name in dir(module):
     obj = getattr(module, name)
-    if isinstance(obj, type) and issubclass(obj, BaseModel):
-        obj.model_rebuild(force=True)
+    try:
+        if isinstance(obj, type) and issubclass(obj, BaseModel):
+            obj.model_rebuild(force=True)
+    except TypeError:
+        continue 
