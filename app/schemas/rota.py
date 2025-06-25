@@ -1,4 +1,4 @@
-from app.schemas.dispatch import DispatchToutbox
+from app.schemas.dispatch import DispatchToutboxV2 as DispatchToutbox
 
 class RotaPayload(DispatchToutbox):
     pass
