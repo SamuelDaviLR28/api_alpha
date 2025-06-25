@@ -145,3 +145,10 @@ class DispatchVivoSchemaFinal(BaseModel):
         values.pop("Transportadora", None)
         values.pop("Tomador", None)
         return values
+
+# 🔧 Força o Pydantic a resolver os tipos referenciados por string
+Frete.model_rebuild()
+Item.model_rebuild()
+InfosAdicionais.model_rebuild()
+NotaFiscal.model_rebuild()
+DispatchVivoSchemaFinal.model_rebuild()
