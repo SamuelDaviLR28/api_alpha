@@ -13,6 +13,7 @@ async def get_db():
     async with SessionLocal() as session:
         yield session
 
+# ✅ ENDPOINT PRINCIPAL
 @router.post("/dispatch", status_code=201)
 async def receive_dispatch(
     request: Request,
@@ -21,12 +22,13 @@ async def receive_dispatch(
     try:
         body = await request.json()
 
-        # 🧹 Remove campos soltos no root
+        # 🧹 Remove campos potencialmente soltos no root
         body.pop("Transportadora", None)
         body.pop("Tomador", None)
 
         # 👇 Faz parse manual usando seu modelo Pydantic
         payload = DispatchToutbox(**body)
+
     except Exception as e:
         print("🚨 Erro ao parsear DispatchToutbox:", str(e))
         raise HTTPException(status_code=422, detail=f"Erro ao processar JSON: {str(e)}")
@@ -62,3 +64,14 @@ async def receive_dispatch(
     await db.refresh(novo)
 
     return {"message": "Pedido recebido com sucesso", "id": novo.id}
+
+
+# ✅ ENDPOINT DE DEBUG PARA INSPECIONAR O SCHEMA
+@router.post("/debug-schema")
+async def debug_schema():
+    campos = list(DispatchToutbox.__annotations__.keys())
+    return {
+        "Campos no DispatchToutbox": campos,
+        "Tipo Transportadora": str(DispatchToutbox.__annotations__.get("Transportadora", "❌ Não definido")),
+        "Tipo Tomador": str(DispatchToutbox.__annotations__.get("Tomador", "❌ Não definido"))
+    }
