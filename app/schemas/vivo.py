@@ -86,7 +86,7 @@ class Item(BaseModel):
     Comprimento: Optional[float] = None
     Formato: Optional[str] = None
     Produtos: Optional[List[Produto]] = None
-    Frete: Optional["Frete"] = None
+    Frete: Optional[Frete] = None
 
 class InfosAdicionais(BaseModel):
     CartaoPostagem: Optional[str] = None
@@ -113,7 +113,7 @@ class NotaFiscal(BaseModel):
     ValorTotal: Optional[float] = None
     ValorTotalProdutos: Optional[float] = None
     StringXML: Optional[str] = None
-    InfosAdicionais: Optional[Union["InfosAdicionais", dict]] = None
+    InfosAdicionais: Optional[Union[InfosAdicionais, dict]] = None
     model_config = ConfigDict(extra="ignore")
 
 class DispatchVivoSchemaFinal(BaseModel):
@@ -136,8 +136,8 @@ class DispatchVivoSchemaFinal(BaseModel):
     Rede: Optional[str] = None
     Campanha: Optional[str] = None
     Itens: Optional[List[Item]] = Field(default=None, alias="Itens")
-    NotaFiscal: Optional["NotaFiscal"] = None
-    InfosAdicionais: Optional["InfosAdicionais"] = None
+    NotaFiscal: Optional[NotaFiscal] = None
+    InfosAdicionais: Optional[InfosAdicionais] = None
     VersaoSchema: Optional[str] = "v2.11.3"
 
     @root_validator(pre=True)
@@ -146,7 +146,10 @@ class DispatchVivoSchemaFinal(BaseModel):
         values.pop("Tomador", None)
         return values
 
-# 🔧 Reconstrói apenas os modelos necessários
+# 🛠️ Corrigir referências circulares (obrigatório)
+Produto.model_rebuild()
+Transportadora.model_rebuild()
+Pessoa.model_rebuild()
 Frete.model_rebuild()
 Item.model_rebuild()
 InfosAdicionais.model_rebuild()
