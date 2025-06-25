@@ -4,7 +4,7 @@ import os
 
 from app.routes import dispatch, patch, rastro, motorista, rota, cancelamento
 from app.database import engine, Base
-from app.schemas.dispatch import DispatchToutboxV2 as DispatchToutbox
+from app.schemas.vivo import DispatchVivoModel as DispatchToutbox
 
 load_dotenv()
 app = FastAPI()
