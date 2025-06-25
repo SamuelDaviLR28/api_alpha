@@ -119,8 +119,8 @@ class NotaFiscal(BaseModel):
 
 # ---------------------- MODELO PRINCIPAL ----------------------
 
-class DispatchToutbox(BaseModel):
-    model_config = ConfigDict(extra="ignore")  # Ignora campos inesperados
+class DispatchToutboxV2(BaseModel):
+    model_config = ConfigDict(extra="ignore")
 
     CriacaoPedido: Optional[str] = None
     DataPagamento: Optional[str] = None
