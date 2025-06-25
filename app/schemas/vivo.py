@@ -146,9 +146,11 @@ class DispatchVivoSchemaFinal(BaseModel):
         values.pop("Tomador", None)
         return values
 
-# 🔧 Força o Pydantic a resolver os tipos referenciados por string
-Frete.model_rebuild()
-Item.model_rebuild()
-InfosAdicionais.model_rebuild()
-NotaFiscal.model_rebuild()
-DispatchVivoSchemaFinal.model_rebuild()
+# 🔧 Corrige avaliação dos tipos atrasados no Pydantic
+import sys
+
+module = sys.modules[__name__]
+for name in dir(module):
+    obj = getattr(module, name)
+    if isinstance(obj, type) and hasattr(obj, "model_rebuild"):
+        obj.model_rebuild(force=True)
