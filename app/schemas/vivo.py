@@ -146,11 +146,11 @@ class DispatchVivoSchemaFinal(BaseModel):
         values.pop("Tomador", None)
         return values
 
-# 🔧 Corrige avaliação dos tipos atrasados no Pydantic
 import sys
+from pydantic import BaseModel
 
 module = sys.modules[__name__]
 for name in dir(module):
     obj = getattr(module, name)
-    if isinstance(obj, type) and hasattr(obj, "model_rebuild"):
+    if isinstance(obj, type) and issubclass(obj, BaseModel):
         obj.model_rebuild(force=True)
